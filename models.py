@@ -2,16 +2,12 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin 
 from werkzeug.security import generate_password_hash, check_password_hash
-from datetime import datetime
+from datetime import datetime, time
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://Many_Letters:VitaLol1337@localhost/testDB'
 db = SQLAlchemy(app)
-login_manager = LoginManager(app)
 
-@login_manager.user_loader
-def load_user(user_id):
-    return db.session.query(User).get(user_id)
 
 class User(db.Model, UserMixin):
     __tablename__ = 'users'
@@ -35,3 +31,8 @@ class Note(db.Model):
 	title = db.Column(db.String(255), nullable = False)
 	description = db.Column(db.String(511), nullable = True)
 	created_on = db.Column(db.DateTime(), default=datetime.utcnow)
+	status = db.Column(db.Boolean())
+
+
+	def set_created(self):
+		self.created_on = datetime.now()
