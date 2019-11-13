@@ -3,7 +3,7 @@
   {% for category, message in  get_flashed_messages(with_categories=true) %}
   <spam class="{{ category }}">{{ message }}</spam>
     {% endfor %}
-    
+
    <form action="" method="post">
   {{ form.csrf_token }}
   <p>
@@ -25,15 +25,14 @@
       {% endif %}
   </p>
   <p>
-      {{ form.remember.label() }}
+    <div class="form-check">
+      <label class="form-check-label" for="exampleCheck1">{{ form.remember.label() }} </label>
       {{ form.remember() }}
+    </div>
   </p>
   <p>
       {{ form.submit() }}
   </p>
     </form>
-
-
-    {{ session['username'] }}
 {% endblock %}
 
