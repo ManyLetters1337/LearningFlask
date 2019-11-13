@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   What is it
     {% block head %}
     <link rel="stylesheet" href="style.css" />
-    <title>{% block title %}{% endblock %} - My Webpage</title>
+    <title>{% block title %}{% endblock %}</title>
     {% endblock %}
+    {% if not session['user_id'] %} <nav><a href="/registration">Registration</a> |  <a href="/login">Login</a> | {% endif %}
+       {% if session['user_id'] %} <a href="/logout">Logout</a> | {% endif %} <a href="/">Main Page</a></nav>
+    <p>
 </head>
 <body>
     <div id="content">{% block content %}{% endblock %}</div>

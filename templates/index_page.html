@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-	{% if username %}
-	Hello <a href="/logout"> {{ username }} </a>
+	{% if session['user_id'] %}
+	Hello <a href="/logout"> {{ session['user_id'] }} </a>
 	{% else %}
 	<a href = "/login">You are not logged in</a>
 	{% endif %}
