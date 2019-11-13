@@ -1,7 +1,11 @@
 from flask import Flask, flash, url_for, session, request, render_template, redirect
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import LoginManager, login_required, login_user, current_user
+from models import User, Note
+from forms import LoginForm
+
+
 import os
 
 app = Flask(__name__)
@@ -10,31 +14,12 @@ app.secret_key = os.urandom(24)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://Many_Letters:VitaLol1337@localhost/testDB'
 
 db = SQLAlchemy(app)
+login_manager = LoginManager(app)
 
 
-class User(db.Model):
-    __tablename__ = 'users'
-    id = db.Column(db.Integer(), primary_key=True)
-    username = db.Column(db.String(70), nullable=False, unique=True)
-    email = db.Column(db.String(100), nullable=False, unique=True)
-    password_hash = db.Column(db.String(100), nullable=False)
-    notes = db.relationship('Note', backref='user')
-
-    def set_password(self, password):
-    	self.password_hash = generate_password_hash(password)
-
-    def check_password(self, password):
-    	return check_password_hash(self.password_hash, password)
-
-
-class Note(db.Model):
-	__tablename__ = 'notes'
-	id = db.Column(db.Integer(), primary_key = True)
-	user_id = db.Column(db.Integer(), db.ForeignKey('users.id'))
-	title = db.Column(db.String(255), nullable = False)
-	description = db.Column(db.String(511), nullable = True)
-	created_on = db.Column(db.DateTime(), default=datetime.utcnow)
-
+@login_manager.user_loader
+def load_user(user_id):
+    return db.session.query(User).get(user_id)
 
 @app.route('/')
 def index_page():
@@ -45,15 +30,14 @@ def index_page():
 
 @app.route('/login', methods = ['POST', 'GET'])
 def login():
-	if request.method == 'POST':
-		session['username'] = request.form['username']
-		user = User(username = request.form['username'], email = request.form['email'], password_hash = generate_password_hash(request.form['password']))
-		db.session.add(user)
-		db.session.commit()
-		flash("You were successfully logged in")
-		return redirect(url_for('index_page'))
-	else:
-		return render_template('login.html')
+	form = LoginForm()
+	if form.validate_on_submit():
+		user = db.session.query(User).filter(User.username == form.username.data).first()
+		if user and user.check_password(form.password.data):
+			login_user(user, remember=form.remember.data)
+			return redirect(url_for('admin'))
+		return redirect(url_for('login'))
+	return render_template('login.html', form=form)
 
 
 
