@@ -19,3 +19,8 @@ class RegistrationForm(FlaskForm):
 	def check_password(self):
 		return self.password == self.password_repeat
 
+class AddNoteForm(FlaskForm):
+	title = StringField("Title", validators=[DataRequired()])
+	description = StringField("Description", validators=[DataRequired()])
+	submit = SubmitField()
+
