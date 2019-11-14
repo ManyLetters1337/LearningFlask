@@ -14,9 +14,10 @@ def check_user_in_db_log(form, field):
 
 
 def check_user_password(form, field):
-    message = "Wrong Password"
-    if not check_password_hash(dbclass.get_password_hash(form.username.data), field.data):
-        raise ValidationError(message)
+    if dbclass.get_user_by_name(form.username.data):
+        message = "Wrong Password"
+        if not check_password_hash(dbclass.get_password_hash(form.username.data), field.data):
+            raise ValidationError(message)
 
 
 class LoginForm(FlaskForm):
