@@ -23,8 +23,8 @@ database = DataBase()
 @app.route('/')
 def index_page():
     if 'user_id' in session:
-        username = database.get_user_by_id(session['user_id']).username
-        return render_template("index_page.html", username=username)
+        # username = database.get_user_by_id(session['user_id']).username
+        return render_template("index_page.html", notes=database.get_notes())
     else:
         return render_template("index_page.html")
 

@@ -33,3 +33,6 @@ class DataBase:
     def login_user(self, username, remember):
         user = self.get_user_by_name(username)
         login_user(user, remember=remember)
+
+    def get_notes(self):
+        return db.session.query(Note).all()
