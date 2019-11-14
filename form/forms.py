@@ -21,7 +21,7 @@ def check_user_password(form, field):
 
 class LoginForm(FlaskForm):
     username = StringField("Username", validators=[DataRequired(), check_user_in_db_log])
-    password = PasswordField("Password", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[DataRequired(), check_user_password])
     remember = BooleanField("Remember me")
     submit = SubmitField()
 
