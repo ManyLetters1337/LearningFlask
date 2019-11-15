@@ -39,3 +39,6 @@ class Note(db.Model):
 
     def set_uuid(self, note_uuid):
         self.note_uuid = note_uuid
+
+    def set_user(self, user_id):
+        self.user_id = user_id
