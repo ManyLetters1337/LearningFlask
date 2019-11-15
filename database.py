@@ -7,6 +7,7 @@ import uuid
 app = Flask(__name__)
 db = SQLAlchemy(app)
 
+
 class DataBase:
     def add_user(self, username, email, password):
         user = User(username=username, email=email)
@@ -23,9 +24,14 @@ class DataBase:
     def get_user_by_id(self, id):
         return db.session.query(User).filter(User.id == id).first()
 
+    def get_uuid_by_id(self, id):
+        return db.session.query(User).filter(User.id == id).first().user_uuid
+
+    def get_id_by_uuid(self, uuid):
+        return db.session.query(User).filter(User.user_uuid == uuid).first().id
+
     def get_password_hash(self, username):
         return db.session.query(User).filter(User.username == username).first().password_hash
-
 
     def get_id_by_name(self, username):
         return db.session.query(User).filter(User.username == username).first().id
@@ -35,4 +41,28 @@ class DataBase:
         login_user(user, remember=remember)
 
     def get_notes(self):
-        return db.session.query(Note).all()
+        return db.session.query(Note)
+
+    def add_note(self, title, description, user_id):
+        note = Note(title=title, description=description, status=False)
+        note.set_created()
+        note.set_user(user_id)
+        note_uuid = uuid.uuid1().__str__()
+        note.set_uuid(note_uuid)
+        db.session.add(note)
+        db.session.commit()
+
+    # def get_note(self, id):
+    #     return db.session.query(Note).filter(Note.id == id).first()
+
+    def get_notes_for_user(self, user_id):
+        return db.session.query(Note).filter(Note.user_id == user_id).order_by(db.desc(Note.created_on))
+
+    # def note_set_status(self, note_id):
+    #     note = self.get_note(note_id)
+    #     if note.status:
+    #         Note.query.filter_by(id=note_id).update(dict(status=False))
+    #     else:
+    #         Note.query.filter_by(id=note_id).update(dict(status=True))
+    #     db.session.commit()
+

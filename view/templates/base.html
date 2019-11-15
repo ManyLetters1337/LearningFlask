@@ -2,13 +2,19 @@
 <html lang="en">
 <head>
     {% block head %}
+    <meta charset="utf-8">
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
     <title>{% block title %}{% endblock %}</title>
     {% endblock %}
-    <nav class="navbar navbar-expand-lg navbar-light bg-light container-fluid"> <a class="navbar-brand" href="/">Main Page</a> 
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom border-primary container-fluid"> <a class="navbar-brand" href="/">Main Page</a>
+        {% if session['user_id'] %}
+        <a href="/add_note"><span class="glyphicon glyphicon-menu-down">Add note</span></a>
+        {% endif %}
     <ul class="navbar-nav ml-auto">
     {% if not session['user_id'] %} <li class="nav-item active">
-        <a class="nav-link" href="/registration">Registration<span class="sr-only">(current)</span></a>
+        <a class="w-auto h-auto nav-link" href="/registration">Registration</a>
       </li>
       <li class="nav-item active">
         <a class="nav-link" href="/login">Login</a>
@@ -21,7 +27,10 @@
     </nav>
 </head>
 <body>
-    <div class="container text-center" id="content">{% block content %}{% endblock %}</div>
+    <div class="container text-center p-5" id="content">
+        {% block content %}
+        {% endblock %}
+    </div>
     <div id="footer">
         {% block footer %}
         {% endblock %}

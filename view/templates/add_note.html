@@ -1,32 +1,20 @@
 {% extends "base.html" %}
 {% block content %}
-  {% for category, message in  get_flashed_messages(with_categories=true) %}
-  <spam class="{{ category }}">{{ message }}</spam>
-    {% endfor %}
-
-   <form action="" method="post">
-  {{ form.csrf_token }}
-  <p>
-      {{ form.title.label() }}
-      {{ form.title() }}
-      {% if form.title.errors %}
-    {% for error in form.title.errors %}
-        {{ error }}
-    {% endfor %}
-      {% endif %}
-  </p>
-  <p>
-      {{ form.description.label() }}
-      {{ form.description() }}
-      {% if form.description.errors %}
-    {% for error in form.description.errors %}
-        {{ error }}
-    {% endfor %}
-      {% endif %}
-  </p>
-  <p>
-      {{ form.submit() }}
-  </p>
-    </form>
+ <div class="w-25 p-3 mx-auto bg-light border border-primary rounded col-md-4">
+       <form action="" method="post">
+      {{ form.csrf_token }}
+      <p>
+          {{ form.title.label() }}
+          {{ form.title() }}
+      </p>
+      <p>
+          {{ form.description.label() }}
+          {{ form.description(style="") }}
+      </p>
+      <p>
+          {{ form.submit() }}
+      </p>
+        </form>
+ </div>
 {% endblock %}
 
