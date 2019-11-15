@@ -22,11 +22,11 @@ database = DataBase()
 
 
 @app.route('/', methods=['POST', 'GET'])
-def index_page():
+def notes_page():
     if 'user_id' in session:
-        return render_template("index_page.html", notes=database.get_notes_for_user(session['user_id']))
+        return render_template("notes.html", notes=database.get_notes_for_user(session['user_id']))
     else:
-        return render_template("index_page.html")
+        return render_template("notes.html")
 
 
 @login_manager.user_loader
@@ -39,7 +39,7 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         database.login_user(form.username.data, form.remember.data)
-        return redirect(url_for('index_page'))
+        return redirect(url_for('notes_page'))
     return render_template('login.html', form=form)
 
 
@@ -65,7 +65,7 @@ def add_note():
     form = AddNoteForm()
     if form.validate_on_submit():
         database.add_note(form.title.data, form.description.data, session['user_id'])
-        return redirect(url_for('index_page'))
+        return redirect(url_for('notes_page'))
     return render_template('add_note.html', form=form)
 
 

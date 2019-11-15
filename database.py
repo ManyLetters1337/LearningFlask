@@ -56,7 +56,7 @@ class DataBase:
     #     return db.session.query(Note).filter(Note.id == id).first()
 
     def get_notes_for_user(self, user_id):
-        return db.session.query(Note).filter(Note.user_id == user_id).order_by(db.desc(Note.created_on))
+        return db.session.query(Note).filter(Note.user_id == user_id).order_by(db.desc(Note.created_on)).all()
 
     # def note_set_status(self, note_id):
     #     note = self.get_note(note_id)
