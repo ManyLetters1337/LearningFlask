@@ -1,18 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
- <div class="w-25 p-3 mx-auto bg-light border border-primary rounded col-md-4">
+ <div class="p-3 mx-auto bg-light border border-primary text-left rounded col-md-8">
        <form action="" method="post">
       {{ form.csrf_token }}
-      <p>
+      <p class="p-0 m-0">
           {{ form.title.label() }}
-          {{ form.title() }}
       </p>
-      <p>
+         {{ form.title(class="form-control",  maxlength="50") }}
+      </p>
+      <p class="p-0 m-0">
           {{ form.description.label() }}
-          {{ form.description(style="") }}
       </p>
+           {{ form.description(class="form-control", style="width: 662px; height:200px; max-height:400px;", maxlength="490") }}
       <p>
-          {{ form.submit() }}
+          {{ form.submit(class="btn btn-primary mt-3") }}
       </p>
         </form>
  </div>

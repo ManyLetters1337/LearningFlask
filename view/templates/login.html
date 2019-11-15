@@ -6,11 +6,11 @@
         {{ form.csrf_token }}
         <p>
           {{ form.username.label() }}
-          {{ form.username() }}
+          {{ form.username(class="form-control",  maxlength="50") }}
         </p>
         <p>
           {{ form.password.label() }}
-          {{ form.password() }}
+          {{ form.password(class="form-control",  maxlength="20") }}
         </p>
         <p>
         <div class="form-check">
@@ -19,7 +19,7 @@
         </div>
         </p>
         <p>
-          {{ form.submit() }}
+          {{ form.submit(class="btn btn-primary mt-3") }}
         </p>
         </form>
     </div>

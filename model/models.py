@@ -30,7 +30,7 @@ class Note(db.Model):
     note_uuid = db.Column(db.String(), nullable=False, unique=True)
     user_id = db.Column(db.Integer(), db.ForeignKey('users.id'))
     title = db.Column(db.String(255), nullable=False)
-    description = db.Column(db.String(511), nullable=True)
+    description = db.Column(db.String(500), nullable=True)
     status = db.Column(db.Boolean())
     created_on = db.Column(db.DateTime(), default=datetime.utcnow)
 
