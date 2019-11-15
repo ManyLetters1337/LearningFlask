@@ -20,11 +20,11 @@ logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 
 database = DataBase()
 
-@app.route('/')
+
+@app.route('/', methods=['POST', 'GET'])
 def index_page():
     if 'user_id' in session:
-        # username = database.get_user_by_id(session['user_id']).username
-        return render_template("index_page.html", notes=database.get_notes())
+        return render_template("index_page.html", notes=database.get_notes_for_user(session['user_id']))
     else:
         return render_template("index_page.html")
 
@@ -64,10 +64,7 @@ def logout():
 def add_note():
     form = AddNoteForm()
     if form.validate_on_submit():
-        note = Note(title=form.title.data, description=form.description.data, status=False)
-        note.set_created()
-        db.session.add(note)
-        db.session.commit()
+        database.add_note(form.title.data, form.description.data, session['user_id'])
         return redirect(url_for('index_page'))
     return render_template('add_note.html', form=form)
 
