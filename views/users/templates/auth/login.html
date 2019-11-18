@@ -7,10 +7,24 @@
         <p>
           {{ form.username.label() }}
           {{ form.username(class="form-control",  maxlength="50") }}
+            {% if form.username.errors %}
+            {% for error in form.username.errors %}
+            <div class="alert alert-danger mx-auto p-3 mt-3" role="alert">
+                <spam class="{{ category }}">{{ error }}</spam>
+            </div>
+            {% endfor %}
+            {% endif %}
         </p>
         <p>
           {{ form.password.label() }}
           {{ form.password(class="form-control",  maxlength="20") }}
+            {% if form.password.errors %}
+            {% for error in form.password.errors %}
+            <div class="alert alert-danger mx-auto p-3 mt-3" role="alert">
+                <spam class="{{ category }}">{{ error }}</spam>
+            </div>
+            {% endfor %}
+            {% endif %}
         </p>
         <p>
         <div class="form-check">
@@ -23,11 +37,5 @@
         </p>
         </form>
     </div>
-    {% for category, message in  get_flashed_messages(with_categories=true) %}
-        <div class="alert alert-danger mx-auto w-25 p-3 mt-3" role="alert">
-            <spam class="{{ category }}">{{ message }}</spam>
-        </div>
-    {% endfor %}
-
 {% endblock %}
 

@@ -1,7 +1,7 @@
 use base;
 
 
-INSERT INTO notes (note_uuid, user_id, title, description, status, created_on)
+INSERT INTO notes (uuid, user_id, title, description, status, created_on)
     VALUES ("d61757ee-0765-11ea-a36e-74d435ecfdb9",
     1,
     "Flask",
@@ -11,7 +11,7 @@ INSERT INTO notes (note_uuid, user_id, title, description, status, created_on)
     );
 
 
-INSERT INTO notes (note_uuid, user_id, title, description, status, created_on)
+INSERT INTO notes (uuid, user_id, title, description, status, created_on)
     VALUES ("3a7f2320-0765-11ea-a36e-74d435ecfdb9",
     1,
     "Jinja",

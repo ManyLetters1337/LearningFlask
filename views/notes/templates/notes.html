@@ -6,9 +6,9 @@
 		{% if notes|length >= 1 %}
 			{% for some in notes %}
 				<div class="alert alert-success text-left" role="alert">
-					<h4 class="alert-heading">{{ some.title }}</h4>
+					<h4 class="nav-item active alert-heading" name="title">{{ some.title }}</h4>
 					<hr>
-					<p>{{ some.description }}</p>
+					<p name="description">{{ some.description }}</p>
 					<hr>
 					<p class="mb-0 text-right">{{ some.created_on }}</p>
 				</div>

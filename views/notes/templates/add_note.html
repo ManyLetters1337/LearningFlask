@@ -7,11 +7,25 @@
           {{ form.title.label() }}
       </p>
          {{ form.title(class="form-control",  maxlength="50") }}
+           {% if form.title.errors %}
+            {% for error in form.title.errors %}
+            <div class="alert alert-danger mx-auto p-3 mt-3" role="alert">
+                <spam class="{{ category }}">{{ error }}</spam>
+            </div>
+            {% endfor %}
+            {% endif %}
       </p>
       <p class="p-0 m-0">
           {{ form.description.label() }}
       </p>
            {{ form.description(class="form-control", style="width: 662px; height:200px; max-height:400px;", maxlength="490") }}
+           {% if form.description.errors %}
+            {% for error in form.description.errors %}
+            <div class="alert alert-danger mx-auto p-3 mt-3" role="alert">
+                <spam class="{{ category }}">{{ error }}</spam>
+            </div>
+            {% endfor %}
+            {% endif %}
       <p>
           {{ form.submit(class="btn btn-primary mt-3") }}
       </p>
