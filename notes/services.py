@@ -59,7 +59,9 @@ class NoteDBService(BaseDBService):
         note: Note = self.get_by_uuid(uuid_)
 
         db.session.delete(note)
-        db.session.commit()
+
+        if note.user_id == session['user_id']:
+            db.session.commit()
 
     def change_note(self, uuid_: str, title: str, description: str) -> Note:
         """
