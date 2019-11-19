@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Notes{% endblock %}
+{% block title %}Note{% endblock %}
 {% block content %}
 	<div class="content p-4">
 	{% if session['user_id'] %}
@@ -17,7 +17,7 @@
                     {% endif %}
                 <hr>
                {{ form.description.label() }}
-                {{ form.description(class="form-control", style="width: 662px; height:200px; max-height:400px;", maxlength="490") }}
+                {{ form.description(class="form-control", style="height:200px; max-height:400px; min-height:200px;", maxlength="490") }}
                     {% if form.description.errors %}
                         {% for error in form.description.errors %}
                             <div class="alert alert-danger mx-auto p-3 mt-3" role="alert">
@@ -25,9 +25,9 @@
                             </div>
                         {% endfor %}
                     {% endif %}
-                <p class="mb-0 text-right">{{ created_on }}</p>
                 <input class="btn btn-primary mt-3" type="submit" value="Change" name="button">
                 <input class="btn btn-primary mt-3" type="submit" value="Delete" name="button">
+                <p class="mb-0 text-right">{{ note.created_on }}</p>
             </div>
         </form>
 	{% else %}

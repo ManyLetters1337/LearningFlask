@@ -1,7 +1,7 @@
 """
 Сlass with the basic methods of interacting with the database
 """
-from sqlalchemy.orm.exc import NoResultFound, UnmappedInstanceError
+from sqlalchemy.orm.exc import NoResultFound
 from werkzeug.exceptions import NotFound
 from .core import db
 from typing import Union

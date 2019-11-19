@@ -3,7 +3,7 @@ Views for Note Class
 """
 from app import app
 from flask import url_for, render_template, redirect, session, request
-from form.forms import AddNoteForm
+from form.forms import NoteForm
 from database.service_registry import services
 from flask_login import login_required
 from typing import TYPE_CHECKING
@@ -12,14 +12,15 @@ if TYPE_CHECKING:
     from notes.models import Note
 
 
-@app.route('/note', methods=['GET'])
+@app.route('/notes', methods=['GET'])
 def notes_page():
     """
     Page with notes
     :return: Page with notes
     """
     if 'user_id' in session:
-        return render_template("notes/notes.html", notes=services.notes.get_notes_for_user(session["user_id"]))
+        return render_template("notes/notes.html", notes=services.notes.get_notes_for_user(session["user_id"]),
+                               username=services.users.get_by_id(session['user_id']).username)
     else:
         return render_template("notes/notes.html")
 
@@ -31,7 +32,7 @@ def add_note():
     Page for Add Note
     :return: Page with Add Note form or Page with Notes
     """
-    form: AddNoteForm = AddNoteForm()
+    form: NoteForm = NoteForm()
 
     if form.validate_on_submit():
         note_: 'Note' = services.notes.create(form.title.data, form.description.data, session['user_id'])
@@ -40,7 +41,7 @@ def add_note():
     return render_template('notes/add_note.html', form=form)
 
 
-@app.route('/note/<uuid>/', methods=['POST', 'GET'])
+@app.route('/notes/<uuid>/', methods=['POST', 'GET'])
 @login_required
 def note(uuid: str):
     """
@@ -48,7 +49,7 @@ def note(uuid: str):
     :param uuid:
     :return:
     """
-    form: AddNoteForm = AddNoteForm()
+    form: NoteForm = NoteForm()
     note_instance = services.notes.get_by_uuid(uuid)
     form.description.data = note_instance.description
 

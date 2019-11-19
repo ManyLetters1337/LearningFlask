@@ -4,11 +4,13 @@
     {% block head %}
     <meta charset="utf-8">
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <title>{% block title %}{% endblock %}</title>
     {% endblock %}
-    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom border-primary container-fluid"> <a class="navbar-brand" href="/note">Notes</a>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom border-primary container-fluid">
+        <a class="navbar-brand" href="/notes">Notes</a>
         {% if session['user_id'] %}
         <a class="text-light" href="/add_note"><button class="btn btn-primary">Add Note</button></a>
         {% endif %}
@@ -20,6 +22,9 @@
         <a class="nav-link" href="/login">Login</a>
       </li>{% endif %}
     {% if session['user_id'] %} <li class="nav-item active ml-auto">
+        <a class="nav-link" href="/note">{{ username }}</a>
+        </li>
+        <li class="nav-item active ml-auto">
         <a class="nav-link" href="/logout">Logout</a>
       </li>
       {% endif %}

@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block title %} Add Note {% endblock %}
 {% block content %}
  <div class="p-3 mx-auto bg-light border border-primary text-left rounded col-md-8">
        <form action="" method="post">
@@ -18,7 +19,7 @@
       <p class="p-0 m-0">
           {{ form.description.label() }}
       </p>
-           {{ form.description(class="form-control", style="width: 662px; height:200px; max-height:400px;", maxlength="490") }}
+           {{ form.description(class="form-control", style="width: 662px; height:200px; max-height:400px; min-height:200px;", maxlength="490") }}
            {% if form.description.errors %}
             {% for error in form.description.errors %}
             <div class="alert alert-danger mx-auto p-3 mt-3" role="alert">

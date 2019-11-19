@@ -4,6 +4,8 @@ Database interaction methods for a Note class
 from database.core import db
 from database.base_services import BaseDBService
 from .models import Note
+from datetime import datetime
+from flask import session
 
 
 class NoteDBService(BaseDBService):
@@ -70,7 +72,9 @@ class NoteDBService(BaseDBService):
         note: Note = self.get_by_uuid(uuid_)
         note.title = title
         note.description = description
+        note.created_on = datetime.now()
 
-        db.session.commit()
+        if note.user_id == session['user_id']:
+            db.session.commit()
 
         return note
