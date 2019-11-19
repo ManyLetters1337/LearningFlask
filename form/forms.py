@@ -88,5 +88,5 @@ class AddNoteForm(FlaskForm):
     Add Note form
     """
     title = StringField("Title", validators=[DataRequired()])
-    description = TextAreaField("Description", validators=[DataRequired()])
+    description = TextAreaField("Description", validators=[])
     submit = SubmitField()

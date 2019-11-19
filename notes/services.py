@@ -16,7 +16,7 @@ class NoteDBService(BaseDBService):
         """
         return db.session.query(Note).all()
 
-    def get_notes_for_user(self, user_id: int) -> Note:
+    def get_notes_for_user(self, user_id: int) -> Note:  # ??
         """
         Get note for current user
         :param user_id:
@@ -48,7 +48,7 @@ class NoteDBService(BaseDBService):
 
         return note
 
-    def delete_note(self, uuid_: str) -> db.Model:
+    def delete_note(self, uuid_: str):
         """
         Delete Note
         :param uuid_:

@@ -4,6 +4,7 @@
 from sqlalchemy.orm.exc import NoResultFound, UnmappedInstanceError
 from werkzeug.exceptions import NotFound
 from .core import db
+from typing import Union
 import uuid
 
 
@@ -22,7 +23,7 @@ class BaseDBService:
         except NoResultFound as e:
             raise NotFound()
 
-    def get_by_id_or_none(self, id_: int) -> db.Model:
+    def get_by_id_or_none(self, id_: int) -> Union[db.Model, None]:
         """
         Get by id
         :param id_:
@@ -42,7 +43,7 @@ class BaseDBService:
         except NoResultFound as e:
             raise NotFound()
 
-    def get_by_uuid_or_none(self, uuid_: str) -> db.Model:
+    def get_by_uuid_or_none(self, uuid_: str) -> Union[db.Model, None]:
         """
         Get by uuid
         :param uuid_:
@@ -50,7 +51,7 @@ class BaseDBService:
         """
         return db.session.query(self.model).filter_by(uuid=uuid_).first()
 
-    def get_uuid_by_id(self, id_: int) -> db.Model:
+    def get_uuid_by_id(self, id_: int) -> uuid:
         """
         Get uuid by id
         :param id_:
@@ -58,7 +59,7 @@ class BaseDBService:
         """
         return db.session.query(self.model.uuid).filter_by(id=id_).first()
 
-    def create(self, **kwargs):
+    def create(self, **kwargs) -> db.Model:  # ???
         """
         Create instance
         :param kwargs: instance param

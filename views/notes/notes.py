@@ -34,7 +34,7 @@ def add_note():
     form: AddNoteForm = AddNoteForm()
 
     if form.validate_on_submit():
-        services.notes.create(form.title.data, form.description.data, session['user_id'])
+        note_: 'Note' = services.notes.create(form.title.data, form.description.data, session['user_id'])
         return redirect(url_for('notes_page'))
 
     return render_template('notes/add_note.html', form=form)

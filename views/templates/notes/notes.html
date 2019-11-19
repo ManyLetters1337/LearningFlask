@@ -3,14 +3,16 @@
 {% block content %}
 	<div class="content p-4">
 	{% if session['user_id'] %}
-		{% if notes|length >= 1 %}
+		{% if notes|length > 0 %}
 			{% for some in notes %}
 				<a class="" style="text-decoration: none" href="{{ url_for('note', uuid=some.uuid) }}">
 					<div class="alert alert-success text-left" role="alert">
 						<h4 class="nav-item active alert-heading" name="title">{{ some.title }}</h4>
 						<hr>
-						<p name="description">{{ some.description }}</p>
-						<hr>
+						{% if some.description|length > 0 %}
+							<p name="description">{{ some.description }}</p>
+							<hr>
+						{% endif %}
 						<p class="mb-0 text-right">{{ some.created_on }}</p>
 					</div>
 				</a>
