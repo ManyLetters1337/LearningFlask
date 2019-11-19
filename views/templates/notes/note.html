@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Notes{% endblock %}
+{% block content %}
+	<div class="content p-4">
+	{% if session['user_id'] %}
+        <form method="POST">
+            {{ form.csrf_token }}
+            <div class="alert alert-success text-left" role="alert">
+                {{ form.title.label() }}
+                {{ form.title(class="form-control",  maxlength="50", value=note.title) }}
+                    {% if form.title.errors %}
+                        {% for error in form.title.errors %}
+                            <div class="alert alert-danger mx-auto p-3 mt-3" role="alert">
+                                <spam class="{{ category }}">{{ error }}</spam>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                <hr>
+               {{ form.description.label() }}
+                {{ form.description(class="form-control", style="width: 662px; height:200px; max-height:400px;", maxlength="490") }}
+                    {% if form.description.errors %}
+                        {% for error in form.description.errors %}
+                            <div class="alert alert-danger mx-auto p-3 mt-3" role="alert">
+                                <spam class="{{ category }}">{{ error }}</spam>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                <p class="mb-0 text-right">{{ created_on }}</p>
+            </div>
+        </form>
+	{% else %}
+	You are not logged in. <a href = "/login"> Log in </a> or <a href = "/registration"> Sign up </a>
+	{% endif %}
+	</div>
+{% endblock %}

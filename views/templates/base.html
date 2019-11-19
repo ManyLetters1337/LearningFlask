@@ -8,7 +8,7 @@
 
     <title>{% block title %}{% endblock %}</title>
     {% endblock %}
-    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom border-primary container-fluid"> <a class="navbar-brand" href="/">Notes</a>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom border-primary container-fluid"> <a class="navbar-brand" href="/note">Notes</a>
         {% if session['user_id'] %}
         <a class="text-light" href="/add_note"><button class="btn btn-primary">Add Note</button></a>
         {% endif %}

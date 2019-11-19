@@ -1,13 +1,16 @@
 """
 Authentication views for User Class
 """
+from typing import TYPE_CHECKING
+
 from flask import flash, url_for, render_template, redirect
 from app import app
 from form.forms import LoginForm, RegistrationForm
 from database.service_registry import services
 from flask_login import login_required, logout_user, LoginManager, login_user
 
-app.template_folder = "views/users/"
+if TYPE_CHECKING:
+    from users.models import User
 
 login_manager = LoginManager(app)
 
@@ -35,7 +38,7 @@ def login():
                    remember=form.remember.data)
         return redirect(url_for('notes_page'))
 
-    return render_template('login.html', form=form)
+    return render_template('users/auth/login.html', form=form)
 
 
 @app.route('/registration', methods=['POST', 'GET'])
@@ -44,13 +47,13 @@ def registration():
     Registered user
     :return: Page with registration form or page with notes for registered user
     """
-    form = RegistrationForm()
+    form: RegistrationForm = RegistrationForm()
 
     if form.validate_on_submit():
-        services.users.create(form.username.data, form.email.data, form.password.data)
+        user: 'User' = services.users.create(form.username.data, form.email.data, form.password.data)
         return redirect(url_for('notes_page'))
 
-    return render_template('registration.html', form=form)
+    return render_template('users/auth/registration.html', form=form)
 
 
 @app.route('/logout')
