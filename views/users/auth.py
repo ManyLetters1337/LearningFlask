@@ -31,7 +31,7 @@ def login():
     User login
     :return: Page with Log In form or page with notes for logged-in user
     """
-    form = LoginForm()
+    form: LoginForm = LoginForm()
 
     if form.validate_on_submit():
         login_user(services.users.get_by_id(services.users.get_id_by_name(form.username.data)),
