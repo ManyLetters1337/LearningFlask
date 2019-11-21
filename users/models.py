@@ -4,6 +4,7 @@ User Class
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash
 from database.core import db
+import uuid
 
 
 class User(db.Model, UserMixin):

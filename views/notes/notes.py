@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from notes.models import Note
 
 
-@app.route('/notes', methods=['GET'])
+@app.route('/note', methods=['GET'])
 def notes_page():
     """
     Page with notes
@@ -33,15 +33,15 @@ def add_note():
     :return: Page with Add Note form or Page with Notes
     """
     form: NoteForm = NoteForm()
-
     if form.validate_on_submit():
-        note_: 'Note' = services.notes.create(form.title.data, form.description.data, session['user_id'])
+        note_: 'Note' = services.notes.create(form.title.data, form.description.data,
+                                              session['user_id'], form.status.data, form.project.data)
         return redirect(url_for('notes_page'))
 
     return render_template('notes/add_note.html', form=form)
 
 
-@app.route('/notes/<uuid>/', methods=['POST', 'GET'])
+@app.route('/note/<uuid>/', methods=['POST', 'GET'])
 @login_required
 def note(uuid: str):
     """
@@ -52,12 +52,14 @@ def note(uuid: str):
     form: NoteForm = NoteForm()
     note_instance = services.notes.get_by_uuid(uuid)
     form.description.data = note_instance.description
+    form.status.data = note_instance.status
 
     if form.validate_on_submit():
         if request.form['button'] == 'Delete':
             services.notes.delete_note(uuid)
         elif request.form['button'] == 'Change':
-            note_: 'Note' = services.notes.change_note(uuid, form.title.data, request.form['description'])
+            note_: 'Note' = services.notes.change_note(uuid, form.title.data,
+                                                       request.form['description'], request.form['status'])
 
         return redirect(url_for('notes_page'))
 

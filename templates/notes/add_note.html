@@ -7,6 +7,7 @@
       <p class="p-0 m-0">
           {{ form.title.label() }}
       </p>
+           <p>
          {{ form.title(class="form-control",  maxlength="50") }}
            {% if form.title.errors %}
             {% for error in form.title.errors %}
@@ -19,16 +20,42 @@
       <p class="p-0 m-0">
           {{ form.description.label() }}
       </p>
+       <p>
            {{ form.description(class="form-control", style="width: 662px; height:200px; max-height:400px; min-height:200px;", maxlength="490") }}
            {% if form.description.errors %}
             {% for error in form.description.errors %}
             <div class="alert alert-danger mx-auto p-3 mt-3" role="alert">
                 <spam class="{{ category }}">{{ error }}</spam>
             </div>
-            {% endfor %}
-            {% endif %}
+           {% endfor %}
+           {% endif %}
+           </p>
+           <p class="p-0 m-0">
+               {{ form.project.label() }}
+           </p>
+           {{ form.project(class="form-control") }}
+           {% if form.project.errors %}
+           {% for error in form.project.errors %}
+           <div class="alert alert-danger mx-auto p-3 mt-3" role="alert">
+               <spam class="{{ category }}">{{ error }}</spam>
+           </div>
+           {% endfor %}
+           {% endif %}
+           </p>
+           <p class="p-0 m-0">
+           {{ form.status.label() }}
+           </p>
+           {{ form.status(class="form-control") }}
+           {% if form.status.errors %}
+           {% for error in form.status.errors %}
+           <div class="alert alert-danger mx-auto p-3 mt-3" role="alert">
+                <spam class="{{ category }}">{{ error }}</spam>
+            </div>
+           {% endfor %}
+           {% endif %}
+           </p>
       <p>
-          {{ form.submit(class="btn btn-primary mt-3") }}
+          {{ form.submit(class="btn btn-primary mt-3", readonly="readonly") }}
       </p>
         </form>
  </div>

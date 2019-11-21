@@ -6,6 +6,7 @@ from database.base_services import BaseDBService
 from .models import Note
 from datetime import datetime
 from flask import session
+import uuid
 
 
 class NoteDBService(BaseDBService):
@@ -26,27 +27,22 @@ class NoteDBService(BaseDBService):
         """
         return db.session.query(Note).filter(Note.user_id == user_id).order_by(db.desc(Note.created_on)).all()
 
-    def get_id_by_title_and_description(self, title: str, description: str) -> id:
-        """
-        Get note by title and description
-        :param title:
-        :param description:
-        :return:
-        """
-        return db.session.query(Note).filter(Note.title == title and Note.description == description).first()
-
-    def create(self, title: str, description: str, user_id: int) -> Note:
+    def create(self, title: str, description: str, user_id: int, status: str, project_id: int) -> Note:
         """
         Create note instance
+        :param project_id:
+        :param status:
         :param title:
         :param description:
         :param user_id:
         :return: Note instance
         """
-        note: Note = super(NoteDBService, self).create(title=title, description=description, status=False)
+        note: Note = super(NoteDBService, self).new(title=title, description=description, status=status)
         note.set_user(user_id)
+        note.set_uuid(uuid.uuid1().__str__())
+        note.set_project(project_id)
 
-        db.session.commit()  # уточнить
+        self.commit()
 
         return note
 
@@ -54,18 +50,19 @@ class NoteDBService(BaseDBService):
         """
         Delete Note
         :param uuid_:
-        :return:   ???
+        :return:
         """
         note: Note = self.get_by_uuid(uuid_)
 
         db.session.delete(note)
 
-        if note.user_id == session['user_id']:
-            db.session.commit()
+        if note.user_id.__str__() == session['user_id'].__str__():
+            self.commit()
 
-    def change_note(self, uuid_: str, title: str, description: str) -> Note:
+    def change_note(self, uuid_: str, title: str, description: str, status: str) -> Note:
         """
         Change data in Note
+        :param status:
         :param uuid_:
         :param title:
         :param description:
@@ -74,9 +71,9 @@ class NoteDBService(BaseDBService):
         note: Note = self.get_by_uuid(uuid_)
         note.title = title
         note.description = description
-        note.created_on = datetime.now()
+        note.status = status
 
-        if note.user_id == session['user_id']:
-            db.session.commit()
+        if note.user_id.__str__() == session['user_id'].__str__():
+            self.commit()
 
         return note

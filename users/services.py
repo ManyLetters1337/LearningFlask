@@ -6,12 +6,13 @@ from database.core import db
 from sqlalchemy.orm.exc import NoResultFound
 from werkzeug.exceptions import NotFound
 from .models import User
+import uuid
 
 
 class UserDBService(BaseDBService):
     model = User
 
-    def get_password_hash(self, username: str) -> 'password_hash': # ???
+    def get_password_hash(self, username: str) -> 'password_hash':
         """
         Get password_hash for user
         :param username:
@@ -53,9 +54,10 @@ class UserDBService(BaseDBService):
         :param password:
         :return: User instance
         """
-        user: User = super(UserDBService, self).create(username=username, email=email)
+        user: User = super(UserDBService, self).new(username=username, email=email)
         user.set_password(password)
+        user.set_uuid(uuid.uuid1().__str__())
 
-        db.session.commit()
+        self.commit()
 
         return user
