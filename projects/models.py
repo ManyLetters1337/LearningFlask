@@ -19,14 +19,14 @@ class Project(db.Model):
 
     def set_uuid(self, uuid_):
         """
-        Set note uuid
+        Set project uuid
         :param uuid_:
         """
         self.uuid = uuid_
 
     def set_user(self, id_):
         """
-        Set user_id in note
+        Set user_id in project
         :param id_:
         """
         self.user_id = id_
