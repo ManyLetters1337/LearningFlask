@@ -3,7 +3,7 @@ Forms with validators for these forms
 """
 from flask import flash
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, TextAreaField, BooleanField, PasswordField
+from wtforms import StringField, SubmitField, TextAreaField, BooleanField, PasswordField, SelectField
 from werkzeug.security import check_password_hash
 from wtforms.validators import DataRequired, Email, ValidationError, EqualTo
 from database.service_registry import services
@@ -64,7 +64,7 @@ def check_user_in_db_reg(form, field):
     Checking the presence of a user in the database
     :param form:
     :param field:
-    :return:
+    :return: ValidationError or None
     """
     message = "User already exist"
     if services.users.get_user_by_name(field.data):
@@ -83,10 +83,20 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField()
 
 
+def project_choices():
+    projects = services.projects.get_projects()
+    return [(project.id, project.title) for project in projects]
+
+
 class NoteForm(FlaskForm):
     """
     Note form
     """
     title = StringField("Title", validators=[DataRequired()])
     description = TextAreaField("Description", validators=[])
+    status = SelectField("Status", choices=[("Open", "Open"), ("In Progress", "In Progress"),
+                                            ("Resolved", "Resolved"), ("Closed", "Closed")],
+                         validators=[])
+    project = SelectField("Project", coerce=int, choices=project_choices())
     submit = SubmitField()
+
