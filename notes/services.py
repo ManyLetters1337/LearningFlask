@@ -59,9 +59,10 @@ class NoteDBService(BaseDBService):
         if note.user_id.__str__() == session['user_id'].__str__():
             self.commit()
 
-    def change_note(self, uuid_: str, title: str, description: str, status: str) -> Note:
+    def change_note(self, uuid_: str, title: str, description: str, status: str, project: int) -> Note:
         """
         Change data in Note
+        :param project:
         :param status:
         :param uuid_:
         :param title:
@@ -72,6 +73,7 @@ class NoteDBService(BaseDBService):
         note.title = title
         note.description = description
         note.status = status
+        note.set_project(project)
 
         if note.user_id.__str__() == session['user_id'].__str__():
             self.commit()
