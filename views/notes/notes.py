@@ -13,6 +13,7 @@ if TYPE_CHECKING:
 
 
 @app.route('/note', methods=['GET'])
+@login_required
 def notes_page():
     """
     Page with notes
@@ -33,6 +34,9 @@ def add_note():
     :return: Page with Add Note form or Page with Notes
     """
     form: NoteForm = NoteForm()
+    projects = services.projects.get_projects_for_form(session['user_id'])
+    form.project.choices = [(project.id, project.title) for project in projects]
+
     if form.validate_on_submit():
         note_: 'Note' = services.notes.create(form.title.data, form.description.data,
                                               session['user_id'], form.status.data, form.project.data)
@@ -51,15 +55,19 @@ def note(uuid: str):
     """
     form: NoteForm = NoteForm()
     note_instance = services.notes.get_by_uuid(uuid)
+    projects = services.projects.get_projects_for_form(session['user_id'])
+
     form.description.data = note_instance.description
     form.status.data = note_instance.status
+    form.project.choices = [(project.id, project.title) for project in projects]
 
     if form.validate_on_submit():
         if request.form['button'] == 'Delete':
             services.notes.delete_note(uuid)
         elif request.form['button'] == 'Change':
             note_: 'Note' = services.notes.change_note(uuid, form.title.data,
-                                                       request.form['description'], request.form['status'])
+                                                       request.form['description'], request.form['status'],
+                                                       request.form['project'])
 
         return redirect(url_for('notes_page'))
 
