@@ -59,16 +59,23 @@ class BaseDBService:
         """
         return db.session.query(self.model.uuid).filter_by(id=id_).first()
 
-    def create(self, **kwargs) -> db.Model:  # ???
+    def new(self, **kwargs) -> db.Model:
         """
         Create instance
-        :param kwargs: instance param
-        :return: Instance
+        :param kwargs:
+        :return:
         """
         instance = self.model(**kwargs)
-
-        instance.set_uuid(uuid_=uuid.uuid1().__str__())
 
         db.session.add(instance)
 
         return instance
+
+    def commit(self):
+        """
+        Make Commit
+        :return:
+        """
+        db.session.commit()
+
+
