@@ -95,8 +95,7 @@ class NoteForm(FlaskForm):
     title = StringField("Title", validators=[DataRequired()])
     description = TextAreaField("Description", validators=[])
     status = SelectField("Status", choices=[("Open", "Open"), ("In Progress", "In Progress"),
-                                            ("Resolved", "Resolved"), ("Closed", "Closed")],
-                         validators=[])
+                                            ("Resolved", "Resolved"), ("Closed", "Closed")], validators=[])
     project = SelectField("Project", coerce=int, choices=project_choices())
     submit = SubmitField()
 
