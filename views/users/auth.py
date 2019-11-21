@@ -13,6 +13,7 @@ if TYPE_CHECKING:
     from users.models import User
 
 login_manager = LoginManager(app)
+login_manager.login_view = 'login'
 
 
 @login_manager.user_loader
