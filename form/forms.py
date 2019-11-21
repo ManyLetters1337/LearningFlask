@@ -99,3 +99,11 @@ class NoteForm(FlaskForm):
     project = SelectField("Project", coerce=int, choices=project_choices())
     submit = SubmitField()
 
+
+class ProjectForm(FlaskForm):
+    """
+    Note form
+    """
+    title = StringField("Title", validators=[DataRequired()])
+    description = TextAreaField("Description", validators=[])
+    submit = SubmitField()

@@ -16,3 +16,4 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://manyletters:12345678*Aa
 from views.notes import notes
 from views.users import auth
 from views.errors import erorrs
+from views.projects import projects

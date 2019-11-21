@@ -2,12 +2,19 @@
 {% block title %}Notes{% endblock %}
 {% block content %}
 	<div class="content p-4">
-	{% if session['user_id'] %}
 		{% if notes|length > 0 %}
 			{% for some in notes %}
 				<a class="" style="text-decoration: none" href="{{ url_for('note', uuid=some.uuid) }}">
-					<div class="alert alert-success text-left" role="alert">
-						<h4 class="nav-item active alert-heading" name="title">{{ some.title }}</h4>
+					{% if some.status == "Open" %}
+						<div class="alert alert-danger text-left" role="alert">
+					{% elif some.status == "In Progress" %}
+						<div class="alert alert-primary text-left" role="alert">
+					{% elif some.status == "Resolved" %}
+						<div class="alert alert-success text-left" role="alert">
+					{% else %}
+						<div class="alert alert-secondary text-left" role="alert">
+					{% endif %}
+							<h4 class="nav-item active alert-heading" name="title">{{ some.title }}</h4>
 						<hr>
 						{% if some.description|length > 0 %}
 							<p name="description">{{ some.description }}</p>
@@ -20,8 +27,5 @@
 		{% else %}
 			You don't have any <a class="badge badge-primary" href="/add_note">notes</a>
 		{% endif %}
-	{% else %}
-	You are not logged in. <a href = "/login"> Log in </a> or <a href = "/registration"> Sign up </a>
-	{% endif %}
 	</div>
 {% endblock %}

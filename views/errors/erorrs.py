@@ -17,13 +17,13 @@ def not_exist(e):
     return render_template("errors/errors.html", title="Not Exist", message=message)
 
 
-@app.errorhandler(401)
-def unauthorized(e):
-    """
-    If user don't unauthorized
-    :param e:
-    :return:
-    """
-    message = "You must be logged in to view this note"
-
-    return render_template("errors/errors.html", title="Unauthorized user", message=message)
+# @app.errorhandler(401)
+# def unauthorized(e):
+#     """
+#     If user don't unauthorized
+#     :param e:
+#     :return:
+#     """
+#     message = "You must be logged in to view this note"
+#
+#     return render_template("errors/errors.html", title="Unauthorized user", message=message)

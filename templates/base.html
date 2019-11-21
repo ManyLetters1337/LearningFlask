@@ -10,11 +10,17 @@
     <title>{% block title %}{% endblock %}</title>
     {% endblock %}
     <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom border-primary container-fluid">
-        <a class="navbar-brand" href="/note">Notes</a>
         {% if session['user_id'] %}
-        <a class="text-light" href="/add_note"><button class="btn btn-primary">Add Note</button></a>
+        <ul class="navbar-nav">
+            <li><a class="text-light mr-2" href="/note"><button class="btn btn-primary">Notes</button></a></li>
+            <li><a class="text-light mr-2" href="/projects"><button class="btn btn-primary">Projects</button></a></li>
+            <li><a class="text-light mr-2" href="/add_note"><button class="btn btn-primary">Add Note</button></a></li>
+            <li><a class="text-light mr-2" href="/add_project"><button class="btn btn-primary">Add Project</button></a></li>
+        </ul>
+        {% else %}
+            <a class="text-light mr-2" href="/note"><button class="btn btn-primary">Notes</button></a>
         {% endif %}
-    <ul class="navbar-nav ml-auto">
+        <ul class="navbar-nav ml-auto">
     {% if not session['user_id'] %} <li class="nav-item active">
         <a class="w-auto h-auto nav-link" href="/registration">Registration</a>
       </li>
@@ -22,8 +28,6 @@
         <a class="nav-link" href="/login">Login</a>
       </li>{% endif %}
     {% if session['user_id'] %} <li class="nav-item active ml-auto">
-        <a class="nav-link" href="/notes">{{ username }}</a>
-        </li>
         <li class="nav-item active ml-auto">
         <a class="nav-link" href="/logout">Logout</a>
       </li>

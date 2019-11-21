@@ -5,7 +5,15 @@
 	{% if session['user_id'] %}
         <form method="POST">
             {{ form.csrf_token }}
-            <div class="alert alert-success text-left" role="alert">
+                {% if note.status == "Open" %}
+                    <div class="alert alert-danger text-left" role="alert">
+                {% elif note.status == "In Progress" %}
+                    <div class="alert alert-primary text-left" role="alert">
+                {% elif note.status == "Resolved" %}
+                    <div class="alert alert-success text-left" role="alert">
+                {% else %}
+                    <div class="alert alert-secondary text-left" role="alert">
+                {% endif %}
                 {{ form.title.label() }}
                  {{ form.title(class="form-control",  maxlength="50", value=note.title) }}
                     {% if form.title.errors %}

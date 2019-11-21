@@ -1,10 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}Projects{% endblock %}
+{% block content %}
+	<div class="content p-4">
+	{% if session['user_id'] %}
+		{% if projects|length > 0 %}
+			{% for project in projects %}
+				<a class="" style="text-decoration: none" href="{{ url_for('project', uuid=project.uuid) }}">
+					<div class="alert alert-success text-left" role="alert">
+						<h4 class="nav-item active alert-heading" name="title">{{ project.title }}</h4>
+						<hr>
+						{% if project.description|length > 0 %}
+							<p name="description">{{ project.description }}</p>
+							<hr>
+						{% endif %}
+						<p class="mb-0 text-right">{{ project.created_on }}</p>
+					</div>
+				</a>
+			{% endfor %}
+		{% else %}
+			You don't have any <a class="badge badge-primary" href="/add_project">projects</a>
+		{% endif %}
+	{% else %}
+	You are not logged in. <a href = "/login"> Log in </a> or <a href = "/registration"> Sign up </a>
+	{% endif %}
+	</div>
+{% endblock %}

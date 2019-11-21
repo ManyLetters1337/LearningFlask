@@ -1,10 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}Project{% endblock %}
+{% block content %}
+	<div class="content p-4">
+	{% if session['user_id'] %}
+        <form method="POST">
+            {{ form.csrf_token }}
+            <div class="alert alert-success text-left" role="alert">
+                {{ form.title.label() }}
+                 {{ form.title(class="form-control",  maxlength="50", value=project.title) }}
+                    {% if form.title.errors %}
+                        {% for error in form.title.errors %}
+                            <div class="alert alert-danger mx-auto p-3 mt-3" role="alert">
+                                <spam class="{{ category }}">{{ error }}</spam>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                <hr>
+               {{ form.description.label() }}
+                {{ form.description(class="form-control", style="height:200px; max-height:400px; min-height:200px;", maxlength="490") }}
+                    {% if form.description.errors %}
+                        {% for error in form.description.errors %}
+                            <div class="alert alert-danger mx-auto p-3 mt-3" role="alert">
+                                <spam class="{{ category }}">{{ error }}</spam>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                <input class="btn btn-primary mt-3" type="submit" value="Change" name="button">
+                <input class="btn btn-primary mt-3" type="submit" value="Delete" name="button">
+                <p class="mb-0 text-right">{{ project.created_on }}</p>
+            </div>
+        </form>
+        {% for note in notes %}
+				<a class="" style="text-decoration: none" href="{{ url_for('note', uuid=note.uuid) }}">
+                    {% if note.status == "Open" %}
+						<div class="alert alert-danger text-left" role="alert">
+					{% elif note.status == "In Progress" %}
+						<div class="alert alert-primary text-left" role="alert">
+					{% elif note.status == "Resolved" %}
+						<div class="alert alert-success text-left" role="alert">
+					{% else %}
+						<div class="alert alert-secondary text-left" role="alert">
+					{% endif %}
+						<h4 class="nav-item active alert-heading" name="title">{{ note.title }}</h4>
+						<hr>
+						{% if note.description|length > 0 %}
+							<p name="description">{{ note.description }}</p>
+							<hr>
+						{% endif %}
+						<p class="mb-0 text-right">{{ note.created_on }}</p>
+					</div>
+				</a>
+			{% endfor %}
+	{% else %}
+	You are not logged in. <a href = "/login"> Log in </a> or <a href = "/registration"> Sign up </a>
+	{% endif %}
+	</div>
+{% endblock %}
