@@ -2,7 +2,8 @@
 Views for Note Class
 """
 from app import app
-from flask import url_for, render_template, redirect, session, request
+from app import page_size
+from flask import url_for, render_template, redirect, session, request, Blueprint
 from form.forms import NoteForm
 from database.service_registry import services
 from flask_login import login_required
@@ -12,16 +13,19 @@ if TYPE_CHECKING:
     from notes.models import Note
 
 
+@app.route('/', methods=['GET'])
 @app.route('/note', methods=['GET'])
+@app.route('/note/<int:page>', methods=['GET'])
 @login_required
-def notes_page():
+def notes_page(page=1):
     """
     Page with notes
     :return: Page with notes
     """
     if 'user_id' in session:
-        return render_template("notes/notes.html", notes=services.notes.get_notes_for_user(session["user_id"]),
-                               username=services.users.get_by_id(session['user_id']).username)
+        return render_template("notes/notes.html", notes=services.notes.apply_pagination(
+            services.notes.get_notes_for_user(session["user_id"]), page, page_size), username=services.users.get_by_id(
+            session['user_id']).username)
     else:
         return render_template("notes/notes.html")
 
@@ -60,6 +64,7 @@ def note(uuid: str):
     form.description.data = note_instance.description
     form.status.data = note_instance.status
     form.project.choices = [(project.id, project.title) for project in projects]
+    form.project.data = note_instance.project_id
 
     if form.validate_on_submit():
         if request.form['button'] == 'Delete':
