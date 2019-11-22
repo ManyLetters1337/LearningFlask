@@ -1,6 +1,7 @@
 """
 Сlass with the basic methods of interacting with the database
 """
+from sqlalchemy.orm import Query
 from sqlalchemy.orm.exc import NoResultFound
 from werkzeug.exceptions import NotFound
 from .core import db
@@ -13,7 +14,7 @@ class BaseDBService:
 
     def get_by_id(self, id_: int) -> db.Model:
         """
-        Get by id
+        Get instance by id
         :param id_:
         :return: instance or NotFound
         :raise NotFound: if instance not found
@@ -25,7 +26,7 @@ class BaseDBService:
 
     def get_by_id_or_none(self, id_: int) -> Union[db.Model, None]:
         """
-        Get by id
+        Get instance by id
         :param id_:
         :return: instance or none
         """
@@ -33,7 +34,7 @@ class BaseDBService:
 
     def get_by_uuid(self, uuid_: str) -> db.Model:
         """
-        Get by uuid
+        Get instance by uuid
         :param uuid_:
         :return: instance or NotFound
         :raise  NotFound: if instance not found
@@ -45,7 +46,7 @@ class BaseDBService:
 
     def get_by_uuid_or_none(self, uuid_: str) -> Union[db.Model, None]:
         """
-        Get by uuid
+        Get instance by uuid
         :param uuid_:
         :return: instance or none
         """
@@ -55,9 +56,27 @@ class BaseDBService:
         """
         Get uuid by id
         :param id_:
-        :return: instance uuid or none
+        :return: uuid for instance
         """
-        return db.session.query(self.model.uuid).filter_by(id=id_).first()
+        return db.session.query(self.model.uuid).filter_by(id=id_).first().uuid
+
+    def filter(self, **kwargs):
+        """
+        Filter
+        :param kwargs:
+        :return:
+        """
+        return db.session.query(self.model).filter_by(**kwargs)
+
+    def apply_pagination(self, query: Query, start: int, page_size: int) -> Query:
+        """
+        Apply pagination for page
+        :param query:
+        :param start:
+        :param page_size:
+        :return:
+        """
+        return query.paginate(start, page_size, True)
 
     def new(self, **kwargs) -> db.Model:
         """
