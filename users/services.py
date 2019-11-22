@@ -19,7 +19,7 @@ class UserDBService(BaseDBService):
         :return: Password_hash or
         """
         try:
-            return db.session.query(User).filter(User.username == username).first().password_hash
+            return self.filter(username=username).first().password_hash
         except NoResultFound as e:
             raise NotFound()
 
@@ -30,7 +30,7 @@ class UserDBService(BaseDBService):
         :return: User id or NotFound
         """
         try:
-            return db.session.query(User).filter(User.username == username).first().id
+            return self.filter(username=username).first().id
         except NoResultFound as e:
             raise NotFound()
 
@@ -42,7 +42,7 @@ class UserDBService(BaseDBService):
         :raise NotFound: if user instance not found
         """
         try:
-            return db.session.query(User).filter(User.username == username).first()
+            return self.filter(username=username).first()
         except NoResultFound as e:
             raise NotFound()
 

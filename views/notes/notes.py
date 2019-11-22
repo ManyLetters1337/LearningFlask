@@ -24,8 +24,7 @@ def notes_page(page=1):
     """
     if 'user_id' in session:
         return render_template("notes/notes.html", notes=services.notes.apply_pagination(
-            services.notes.get_notes_for_user(session["user_id"]), page, page_size), username=services.users.get_by_id(
-            session['user_id']).username)
+            services.notes.get_notes_for_user(session["user_id"]), page, page_size))
     else:
         return render_template("notes/notes.html")
 
@@ -73,7 +72,6 @@ def note(uuid: str):
             note_: 'Note' = services.notes.change_note(uuid, form.title.data,
                                                        request.form['description'], request.form['status'],
                                                        request.form['project'])
-
         return redirect(url_for('notes_page'))
 
     return render_template('notes/note.html', note=note_instance, form=form)

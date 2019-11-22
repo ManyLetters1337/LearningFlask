@@ -64,7 +64,7 @@ class ProjectDBService(BaseDBService):
         :param id_:
         :return:
         """
-        return db.session.query(Note).filter(Note.project_id == id_).all()
+        return db.session.query(Note).filter(Note.project_id == id_).order_by(db.desc(Note.created_on))
 
     def get_projects(self) -> Project:
         """
@@ -79,7 +79,7 @@ class ProjectDBService(BaseDBService):
         :param user_id:
         :return: List of projects for user
         """
-        return db.session.query(Project).filter(Project.user_id == user_id).order_by(db.desc(Project.created_on)).all()
+        return self.filter(user_id=user_id).order_by(db.desc(Project.created_on))
 
     def get_projects_for_form(self, user_id: int) -> Project:
         """
@@ -87,4 +87,4 @@ class ProjectDBService(BaseDBService):
         :param user_id:
         :return: List of projects for form
         """
-        return db.session.query(Project).filter(Project.user_id == user_id).all()
+        return self.filter(user_id=user_id).all()

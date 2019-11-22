@@ -5,8 +5,8 @@ import os
 import logging
 from flask import Flask
 
-logging.basicConfig()
-logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
+# logging.basicConfig()
+# logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
 app = Flask(__name__)
 app.debug = True
 page_size = 2

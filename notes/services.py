@@ -4,7 +4,6 @@ Database interaction methods for a Note class
 from database.core import db
 from database.base_services import BaseDBService
 from .models import Note
-from datetime import datetime
 from flask import session
 import uuid
 
@@ -12,20 +11,13 @@ import uuid
 class NoteDBService(BaseDBService):
     model = Note
 
-    def get_notes(self) -> Note:
-        """
-        Get notes
-        :return: List of all notes
-        """
-        return db.session.query(Note).all()
-
-    def get_notes_for_user(self, user_id: int) -> Note:  # ??
+    def get_notes_for_user(self, user_id: int) -> Note:
         """
         Get note for current user
         :param user_id:
-        :return: List of notes for user
+        :return  Notes for user
         """
-        return db.session.query(Note).filter(Note.user_id == user_id).order_by(db.desc(Note.created_on)).all()
+        return self.filter(user_id=user_id).order_by(db.desc(Note.created_on))
 
     def create(self, title: str, description: str, user_id: int, status: str, project_id: int) -> Note:
         """
