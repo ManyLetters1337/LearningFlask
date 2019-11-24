@@ -4,8 +4,11 @@ Database interaction methods for a User class
 from database.base_services import BaseDBService
 from database.core import db
 from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy import func, case
 from werkzeug.exceptions import NotFound
 from .models import User
+from notes.models import Note
+from projects.models import Project
 import uuid
 
 
@@ -61,3 +64,14 @@ class UserDBService(BaseDBService):
         self.commit()
 
         return user
+
+    def get_statistics(self, id_: int):
+        # return db.session.query(User.username, Project.title, func.count(Note.status).label('status')).\
+        #     filter(User.id == Project.user_id).filter(Project.id == Note.project_id).\
+        #     group_by(User.username, Project.title, Note.status).filter_by(id=id_)
+
+        return db.session.query(Project.title, func.count(case([(Note.status == "Open", 1)])).label("open"),
+                                func.count(case([(Note.status == "In Progress", 1)])).label("in_progress"),
+                                func.count(case([(Note.status == "Resolved", 1)])).label("resolved"),
+                                func.count(case([(Note.status == "Closed", 1)])).label("closed")).\
+            group_by(Project.title).filter(Project.id == Note.project_id).filter_by(user_id=id_)
