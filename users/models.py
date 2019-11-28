@@ -32,3 +32,13 @@ class User(db.Model, UserMixin):
         :param password:
         """
         self.password_hash = generate_password_hash(password)
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'uuid': self.uuid,
+            'username': self.username,
+            'email': self.email,
+            'password_hash': self.password_hash
+        }
+
