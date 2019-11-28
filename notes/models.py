@@ -41,3 +41,15 @@ class Note(db.Model):
         :param id_:
         """
         self.user_id = id_
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'uuid': self.uuid,
+            'user_id': self.user_id,
+            'project_id': self.project_id,
+            'title': self.title,
+            'description': self.description,
+            'status': self.status,
+            'created_on': self.created_on
+        }
