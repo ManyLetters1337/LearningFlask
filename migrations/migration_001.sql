@@ -1,5 +1,3 @@
-use base;
-
 CREATE TABLE users
 ( id INT UNSIGNED AUTO_INCREMENT,
   uuid VARCHAR(36) NOT NULL UNIQUE,
@@ -19,4 +17,5 @@ CREATE TABLE notes
   created_on DATETIME NOT NULL,
   CONSTRAINT `fk_notes_user_id` FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
+
 

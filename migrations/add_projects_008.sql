@@ -1,5 +1,3 @@
-use base;
-
 INSERT INTO projects (uuid, user_id, title, description, created_on)
     VALUES ("8e0e051c-06e2-11ea-a35e-74d435ecfdb9",
     1,

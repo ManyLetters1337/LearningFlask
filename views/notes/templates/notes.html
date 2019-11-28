@@ -4,7 +4,7 @@
 	<div class="content p-4">
 		{% if notes.items|length > 0 %}
 			{% for some in notes.items %}
-				<a class="" style="text-decoration: none" href="{{ url_for('note', uuid=some.uuid) }}">
+				<a class="" style="text-decoration: none" href="{{ url_for('notes.note', uuid=some.uuid) }}">
 					{% if some.status == "Open" %}
 						<div class="alert alert-danger text-left" role="alert">
 					{% elif some.status == "In Progress" %}
@@ -28,24 +28,24 @@
 				</a>
 			{% endfor %}
 		{% else %}
-			You don't have any <a class="badge badge-primary" href="/add_note">notes</a>
+			You don't have any <a class="badge badge-primary" href="{{ url_for('notes.add_note') }}">notes</a>
 		{% endif %}
 	</div>
 <div class="container mx-auto col-md-4">
 	<nav class="">
   <ul class="pagination">
 	  {% if notes.has_prev %}
-    <li class="page-item"><a class="page-link" href="{{ url_for('notes_page', page = notes.prev_num) }}">Previous</a></li>
-    <li class="page-item"><a class="page-link" href="{{ url_for('notes_page', page = notes.prev_num) }}">{{ notes.prev_num }}</a></li>
-    <li class="page-item"><a class="page-link" href="{{ url_for('notes_page', page = notes.page ) }}">{{ notes.page }}</a></li>
+    <li class="page-item"><a class="page-link" href="{{ url_for('notes.notes_page', page = notes.prev_num) }}">Previous</a></li>
+    <li class="page-item"><a class="page-link" href="{{ url_for('notes.notes_page', page = notes.prev_num) }}">{{ notes.prev_num }}</a></li>
+    <li class="page-item"><a class="page-link" href="{{ url_for('notes.notes_page', page = notes.page ) }}">{{ notes.page }}</a></li>
 	  {% elif notes.has_next %}
-	  <li class="page-item" style=""><a class="page-link" href="{{ url_for('notes_page', page = notes.page) }}">Previous</a></li>
-	  <li class="page-item"><a class="page-link" href="{{ url_for('notes_page', page = notes.page ) }}">{{ notes.page }}</a></li>
+	  <li class="page-item" style=""><a class="page-link" href="{{ url_for('notes.notes_page', page = notes.page) }}">Previous</a></li>
+	  <li class="page-item"><a class="page-link" href="{{ url_for('notes.notes_page', page = notes.page ) }}">{{ notes.page }}</a></li>
 	  {% else %}
 	  {% endif %}
 	  {% if notes.has_next %}
-    <li class="page-item"><a class="page-link" href="{{ url_for('notes_page', page = notes.next_num) }}">{{ notes.next_num }}</a></li>
-    <li class="page-item"><a class="page-link" href="{{ url_for('notes_page', page = notes.next_num) }}">Next</a></li>
+    <li class="page-item"><a class="page-link" href="{{ url_for('notes.notes_page', page = notes.next_num) }}">{{ notes.next_num }}</a></li>
+    <li class="page-item"><a class="page-link" href="{{ url_for('notes.notes_page', page = notes.next_num) }}">Next</a></li>
 	  {% endif %}
   </ul>
 </nav>

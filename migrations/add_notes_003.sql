@@ -1,7 +1,3 @@
-use base;
-
-
-
 INSERT INTO notes (uuid, user_id, project_id, title, description, status, created_on)
     VALUES ("d642425-11ea-a3-74d435ecfdb9",
     1,

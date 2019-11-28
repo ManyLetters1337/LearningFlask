@@ -50,7 +50,7 @@
             </div>
         </form>
 	{% else %}
-	You are not logged in. <a href = "/login"> Log in </a> or <a href = "/registration"> Sign up </a>
+	You are not logged in. <a href = "{{ url_for('auth.login') }}"> Log in </a> or <a href = "{{ url_for('auth.registration') }}"> Sign up </a>
 	{% endif %}
 	</div>
 {% endblock %}

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %} Statistics{% endblock %}
+{% block content %}
+ <table class="table" width="100%" cellpadding="5">
+    <thead>
+     <tr>
+    <th scope="col">Project</th>
+    <th scope="col">Open</th>
+    <th scope="col">In Progress</th>
+    <th scope="col">Resolved</th>
+    <th scope="col">Closed</th>
+   </tr>
+    </thead>
+ <tbody>
+ {% for some in stat %}
+    {% for project, value in some.items() %}
+    <tr>
+    <td>{{ project }}</td>
+    {% if value["Open"] %}
+        <td>{{ value["Open"] }}</td>
+    {% else %}
+        <td>0</td>
+    {% endif %}
+    {% if value["In Progress"] %}
+        <td>{{ value["In Progress"] }}</td>
+    {% else %}
+        <td>0</td>
+    {% endif %}
+    {% if value["Resolved"] %}
+        <td>{{ value["Resolved"] }}</td>
+    {% else %}
+        <td>0</td>
+    {% endif %}
+    {% if value["Closed"] %}
+        <td>{{ value["Closed"] }}</td>
+    {% else %}
+        <td>0</td>
+    {% endif %}
+    </tr>
+    {% endfor %}
+ {% endfor %}
+ </tbody>
+
+ </table>
+{% endblock %}
+

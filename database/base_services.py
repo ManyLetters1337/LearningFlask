@@ -3,7 +3,10 @@
 """
 from sqlalchemy.orm import Query
 from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy import func, case
 from werkzeug.exceptions import NotFound
+from notes.models import Note
+from projects.models import Project
 from .core import db
 from typing import Union
 import uuid
@@ -97,4 +100,38 @@ class BaseDBService:
         """
         db.session.commit()
 
+    def get_title_by_id(self, id_: int) -> 'title':
+        """
+        Get title by id
+        :param id_: Instance id
+        :return: Title for this instance
+        """
+        return db.session.query(Project).filter_by(id=id_).first().title
 
+    def get_statistics(self, id_: int) -> list:
+        """
+        Get statistics for user projects
+        :param id_: User id
+        :return:
+        """
+        stat_for_note = db.session.query(Note.project_id, Note.status, func.count()).filter_by(user_id=id_). \
+            group_by(Note.project_id, Note.status)
+        statistics = []
+        check_list = []
+
+        for values in stat_for_note:
+            titles_and_counts = {}
+            status_and_counts = {}
+
+            if values[0] in check_list:
+                continue
+
+            project_title = self.get_title_by_id(values[0])
+            for some in stat_for_note:
+                if self.get_title_by_id(some[0]) == project_title:
+                    status_and_counts[some[1]] = some[2]
+
+            titles_and_counts[project_title] = status_and_counts
+            statistics.append(titles_and_counts)
+            check_list.append(values[0])
+        return statistics

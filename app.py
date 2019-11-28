@@ -2,10 +2,9 @@
 Configs
 """
 import os
-import logging
-from flask import Flask, Blueprint
-from flask_restful import Api
 
+from flask import Flask
+from flask_restful import Api
 
 # logging.basicConfig()
 # logging.getLogger('sqlalchemy.engine').setLevel(logging.INFO)
@@ -17,4 +16,3 @@ app.secret_key = os.urandom(24)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://manyletters:12345678*Aa@localhost/base'
 
 import views
-
