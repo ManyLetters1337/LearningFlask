@@ -19,20 +19,18 @@ class NoteDBService(BaseDBService):
         """
         return self.filter(user_id=user_id).order_by(db.desc(Note.created_on))
 
-    def create(self, title: str, description: str, user_id: int, status: str, project_id: int) -> Note:
+    def create(self, user_id: int, **kwargs) -> Note:
         """
         Create note instance
-        :param project_id:
-        :param status:
-        :param title:
-        :param description:
         :param user_id:
         :return: Note instance
         """
-        note: Note = super(NoteDBService, self).new(title=title, description=description, status=status)
+        note: Note = super(NoteDBService, self).new(title=kwargs['title'],
+                                                    description=kwargs['description'],
+                                                    status=kwargs['status'])
         note.set_user(user_id)
         note.set_uuid(uuid.uuid1().__str__())
-        note.set_project(project_id)
+        note.set_project(kwargs['project_id'])
 
         self.commit()
 
@@ -51,7 +49,7 @@ class NoteDBService(BaseDBService):
         if note.user_id.__str__() == session['user_id'].__str__():
             self.commit()
 
-    def change_note(self, uuid_: str, title: str, description: str, status: str, project: int) -> Note:
+    def change_note(self, uuid_: str, **kwargs) -> Note:
         """
         Change data in Note
         :param project:
@@ -62,10 +60,10 @@ class NoteDBService(BaseDBService):
         :return: Note
         """
         note: Note = self.get_by_uuid(uuid_)
-        note.title = title
-        note.description = description
-        note.status = status
-        note.set_project(project)
+        note.title = kwargs['title']
+        note.description = kwargs['description']
+        note.status = kwargs['status']
+        note.set_project(kwargs['project'])
 
         if note.user_id.__str__() == session['user_id'].__str__():
             self.commit()
