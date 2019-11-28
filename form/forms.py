@@ -1,11 +1,11 @@
 """
 Forms with validators for these forms
 """
-from flask import flash
+from flask import flash, session
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, BooleanField, PasswordField, SelectField
 from werkzeug.security import check_password_hash
-from wtforms.validators import DataRequired, Email, ValidationError, EqualTo
+from wtforms.validators import DataRequired, Email, ValidationError
 from database.service_registry import services
 
 
@@ -88,6 +88,27 @@ def project_choices():
     return [(project.id, project.title) for project in projects]
 
 
+def create_note_form(**kwargs) -> 'NoteForm':
+    """
+    Create Note Form
+    :param kwargs:
+    :return: Note form or Note form with data
+    """
+    projects = services.projects.get_projects_for_form(session['user_id'])
+
+    form: NoteForm = NoteForm()
+    form.set_choices(projects)
+
+    if 'description' in kwargs:
+        form.description.data = kwargs['description']
+    if 'status' in kwargs:
+        form.status.data = kwargs['status']
+    if 'project' in kwargs:
+        form.project.data = kwargs['project']
+
+    return form
+
+
 class NoteForm(FlaskForm):
     """
     Note form
@@ -98,6 +119,32 @@ class NoteForm(FlaskForm):
                                             ("Resolved", "Resolved"), ("Closed", "Closed")], validators=[])
     project = SelectField("Project", coerce=int, choices=project_choices())
     submit = SubmitField()
+
+    def set_choices(self, projects):
+        self.project.choices = [(project.id, project.title) for project in projects]
+
+    def serialize(self):
+        return {
+            'title': self.title,
+            'description': self.description,
+            'status': self.status,
+            'submit': self.submit
+        }
+
+
+def create_project_form(**kwargs) -> 'ProjectForm':
+    """
+    Create Note Form
+    :param kwargs:
+    :return: Note form or Note form with data
+    """
+
+    form: ProjectForm = ProjectForm()
+
+    if 'description' in kwargs:
+        form.description.data = kwargs['description']
+
+    return form
 
 
 class ProjectForm(FlaskForm):
