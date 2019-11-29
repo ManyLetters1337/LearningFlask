@@ -14,8 +14,8 @@
  <tbody>
  {% for some in stat %}
     {% for project, value in some.items() %}
-    <tr>
-    <td><a href="{{ url_for('projects.statistics_for_project_page', uuid=value['uuid']) }}">{{ project }}</a></td>
+    <tr onclick="window.location.href='{{ url_for('projects.statistics_for_project_page', uuid=value['uuid']) }}'; return false">
+    <td>{{ project }}</a></td>
     {% if value["Open"] %}
         <td>{{ value["Open"] }}</td>
     {% else %}

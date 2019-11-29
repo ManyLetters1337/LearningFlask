@@ -40,16 +40,14 @@
     {% endfor %}
  {% endfor %}
  </tbody>
-
  </table>
-
+<div class="card-body">
+<canvas id="donutChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+</div>
 <div class="card-tools">
     <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
     </button>
     <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
-</div>
-<div class="card-body">
-<canvas id="donutChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
 </div>
 <script src="../../static/plugins/get_data_for_chart.js"></script>
 {% endblock %}
