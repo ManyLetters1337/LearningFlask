@@ -15,7 +15,7 @@
  {% for some in stat %}
     {% for project, value in some.items() %}
     <tr>
-    <td>{{ project }}</td>
+    <td><a href="{{ url_for('projects.statistics_for_project_page', uuid=value['uuid']) }}">{{ project }}</a></td>
     {% if value["Open"] %}
         <td>{{ value["Open"] }}</td>
     {% else %}
@@ -36,11 +36,13 @@
     {% else %}
         <td>0</td>
     {% endif %}
+
     </tr>
     {% endfor %}
  {% endfor %}
  </tbody>
 
  </table>
+
 {% endblock %}
 
