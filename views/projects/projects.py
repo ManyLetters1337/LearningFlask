@@ -92,3 +92,27 @@ def project_post(uuid: str):
         project_: Project = services.projects.change_project(uuid, form.title.data, request.form['description'])
 
     return redirect(url_for('projects.projects_page'))
+
+
+@projects.route('/statistics', methods=['GET'])
+@login_required
+def statistics_page():
+    """
+    Page with statisctics for user projects
+    :return:
+    """
+    return render_template("statistics/statistics.html", stat=services.users.get_statistics(session['user_id']))
+
+
+@projects.route('/statistics/<uuid>', methods=['GET'])
+@login_required
+def statistics_for_project_page(uuid: str):
+    """
+    Page with statisctics for user projects
+    :param uuid:
+    :return:
+    """
+    project_id = services.projects.get_by_uuid(uuid).id
+    return render_template("statistics/current_project.html", stat=services.users.get_statistics(session['user_id'],
+                                                                                                 project_id=project_id))
+
