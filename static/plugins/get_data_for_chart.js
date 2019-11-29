@@ -5,6 +5,14 @@ String.prototype.replaceAll = function(search, replacement) {
 
 $(function () {
 
+    let COLORS = {
+        'Open' : '#ff4f4f',
+        'Closed' : '#a39d9d',
+        'In Progress' : '#55b5fa',
+        'Resolved' : '#6bfa55',
+
+    }
+
     url = 'http://' + window.location.host + '/api' + window.location.pathname;
     let xhr = new XMLHttpRequest();
 
@@ -21,7 +29,7 @@ $(function () {
     substring = substring.split(',').join().split(':').join().split(',')
 
     let closed = substring[substring.indexOf('Closed')+1];
-    let in_progress = substring[substring.indexOf('In Progress')+1];
+    let in_progress = substring[substring.indexOf('InProgress')+1];
     let open = substring[substring.indexOf('Open')+1];
     let resolved = substring[substring.indexOf('Resolved')+1];
 
@@ -36,7 +44,7 @@ $(function () {
     datasets: [
         {
       data: [open,in_progress,resolved,closed],
-      backgroundColor : ['#f56954', '#00a65a', '#f39c12', '#00c0ef', '#3c8dbc', '#d2d6de'],
+      backgroundColor : [COLORS['Open'], COLORS['In Progress'], COLORS['Resolved'], COLORS['Closed']],
         }
     ]
     };

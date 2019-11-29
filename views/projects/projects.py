@@ -84,14 +84,21 @@ def project_post(uuid: str):
     :param uuid:
     :return:
     """
-    form: 'ProjectForm' = create_project_form()
+    page = int(request.args.get('page', default=1))
+    project_ = services.projects.get_by_uuid(uuid)
+    form: 'ProjectForm' = create_project_form(description=project_.description)
+    notes_for_user = services.projects.get_notes_for_project(project_.id)
+    notes = services.notes.apply_pagination(notes_for_user, page, page_size)
 
-    if request.form['button'] == 'Delete':
-        services.projects.delete_project(uuid)
-    elif request.form['button'] == 'Change':
-        project_: Project = services.projects.change_project(uuid, form.title.data, request.form['description'])
+    if form.validate():
+        if request.form['button'] == 'Delete':
+            services.projects.delete_project(uuid)
+        elif request.form['button'] == 'Change':
+            project_: Project = services.projects.change_project(uuid, form.title.data, request.form['description'])
 
-    return redirect(url_for('projects.projects_page'))
+        return redirect(url_for('projects.projects_page'))
+
+    return render_template('project.html', project=project_, form=form, notes=notes)
 
 
 @projects.route('/statistics', methods=['GET'])

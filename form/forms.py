@@ -37,6 +37,16 @@ def check_user_password(form, field):
             raise ValidationError(message)
 
 
+def create_login_form():
+    """
+    Create log in form
+    :return:
+    """
+    form: LoginForm = LoginForm()
+
+    return form
+
+
 class LoginForm(FlaskForm):
     """
     Log in form
@@ -71,6 +81,16 @@ def check_user_in_db_reg(form, field):
     if services.users.get_user_by_name(field.data):
         flash(message)
         raise ValidationError(message)
+
+
+def create_registration_form():
+    """
+    Create registration form
+    :return:
+    """
+    form: RegistrationForm = RegistrationForm()
+
+    return form
 
 
 class RegistrationForm(FlaskForm):
