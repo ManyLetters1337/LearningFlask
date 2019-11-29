@@ -1,6 +1,7 @@
 """
 Forms with validators for these forms
 """
+from enum import Enum
 from flask import flash, session
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, BooleanField, PasswordField, SelectField
@@ -109,14 +110,24 @@ def create_note_form(**kwargs) -> 'NoteForm':
     return form
 
 
+class Statuses(Enum):
+    OPEN = 'Open'
+    CLOSED = 'Closed'
+    IN_PROGRESS = 'In Progress'
+    RESOLVED = 'Resolved'
+
+
 class NoteForm(FlaskForm):
     """
     Note form
     """
     title = StringField("Title", validators=[DataRequired()])
     description = TextAreaField("Description", validators=[])
-    status = SelectField("Status", choices=[("Open", "Open"), ("In Progress", "In Progress"),
-                                            ("Resolved", "Resolved"), ("Closed", "Closed")], validators=[])
+    status = SelectField("Status", choices=[(Statuses.OPEN.value, Statuses.OPEN.value),
+                                            (Statuses.IN_PROGRESS.value, Statuses.IN_PROGRESS.value),
+                                            (Statuses.RESOLVED.value, Statuses.RESOLVED.value),
+                                            (Statuses.CLOSED.value, Statuses.CLOSED.value)], validators=[]
+                         )
     project = SelectField("Project", coerce=int, choices=project_choices())
     submit = SubmitField()
 
