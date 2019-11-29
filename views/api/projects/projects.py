@@ -32,3 +32,30 @@ def project_page(uuid: str):
 
     return jsonify(notes=[note.serialize() for note in notes.items], project=project.serialize())
 
+
+@api_projects.route('/statistics', methods=['GET'])
+@login_required
+def statistics_page():
+    """
+    Get method for Statistics Page
+    :return:
+    """
+    statistics = services.projects.get_statistics(session['user_id'])
+
+    return jsonify(statistics)
+
+
+@api_projects.route('/statistics/<uuid>', methods=['GET'])
+@login_required
+def statistics_for_project_page(uuid: str):
+    """
+    Get method for Statistics Page
+    :return:
+    """
+    project_id = services.projects.get_by_uuid(uuid).id
+    statistics = services.projects.get_statistics(session['user_id'], project_id=project_id)
+
+    return jsonify(statistics)
+
+
+
