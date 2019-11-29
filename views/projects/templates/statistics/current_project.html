@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %} Project{% endblock %}
+{% block content %}
+ <table class="table" width="100%" cellpadding="5">
+    <thead>
+     <tr>
+    <th scope="col">Project</th>
+    <th scope="col">Open</th>
+    <th scope="col">In Progress</th>
+    <th scope="col">Resolved</th>
+    <th scope="col">Closed</th>
+   </tr>
+    </thead>
+ <tbody>
+ {% for some in stat %}
+    {% for project, value in some.items() %}
+    <tr>
+    <td>{{ project }}</td>
+    {% if value["Open"] %}
+        <td>{{ value["Open"] }}</td>
+    {% else %}
+        <td>0</td>
+    {% endif %}
+    {% if value["In Progress"] %}
+        <td>{{ value["In Progress"] }}</td>
+    {% else %}
+        <td>0</td>
+    {% endif %}
+    {% if value["Resolved"] %}
+        <td>{{ value["Resolved"] }}</td>
+    {% else %}
+        <td>0</td>
+    {% endif %}
+    {% if value["Closed"] %}
+        <td>{{ value["Closed"] }}</td>
+    {% else %}
+        <td>0</td>
+    {% endif %}
+    </tr>
+    {% endfor %}
+ {% endfor %}
+ </tbody>
+
+ </table>
+
+<div class="card-tools">
+    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
+    </button>
+    <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
+</div>
+<div class="card-body">
+<canvas id="donutChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+</div>
+<script src="../../static/plugins/get_data_for_chart.js"></script>
+{% endblock %}
+
