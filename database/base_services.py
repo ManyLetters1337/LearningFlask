@@ -116,11 +116,11 @@ class BaseDBService:
         """
         stat_for_note = db.session.query(Note.project_id, Note.status, Project.uuid, func.count()).filter_by(user_id=id_, **kwargs). \
             group_by(Note.project_id, Note.status).filter(Project.id == Note.project_id)
-        statistics = []
+        # statistics = []
         check_list = []
+        statistics = {}
 
         for values in stat_for_note:
-            titles_and_counts = {}
             status_and_counts = {}
 
             if values[0] in check_list:
@@ -131,7 +131,6 @@ class BaseDBService:
                 if self.get_title_by_id(some[0]) == project_title:
                     status_and_counts['uuid'] = some[2]
                     status_and_counts[some[1]] = some[3]
-            titles_and_counts[project_title] = status_and_counts
-            statistics.append(titles_and_counts)
+            statistics[project_title] = status_and_counts
             check_list.append(values[0])
         return statistics
