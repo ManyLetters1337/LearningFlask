@@ -19,7 +19,7 @@
  <tbody>
  {% for project, value in stat.items() %}
     <tr onclick="window.location.href='{{ url_for('projects.statistics_for_project_page', uuid=value['uuid']) }}'; return false">
-    <td >{{ project }}</a></td>
+    <td style="cursor: pointer">{{ project }}</a></td>
     {% if value["Open"] %}
         <td style="cursor: pointer">{{ value["Open"] }}</td>
     {% else %}
