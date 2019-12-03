@@ -12,8 +12,7 @@
    </tr>
     </thead>
  <tbody>
- {% for some in stat %}
-    {% for project, value in some.items() %}
+    {% for project, value in stat.items() %}
     <tr>
     <td>{{ project }}</td>
     {% if value["Open"] %}
@@ -38,17 +37,13 @@
     {% endif %}
     </tr>
     {% endfor %}
- {% endfor %}
  </tbody>
  </table>
 <div class="card-body">
 <canvas id="donutChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
 </div>
-<div class="card-tools">
-    <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i>
-    </button>
-    <button type="button" class="btn btn-tool" data-card-widget="remove"><i class="fas fa-times"></i></button>
-</div>
-<script src="../../static/plugins/get_data_for_chart.js"></script>
+<script src="../../static/plugins/Utils.js" type="module"></script>
+<script src="../../static/plugins/Chart.js" type="module"></script>
+<script src="../../static/plugins/View.js" type="module"></script>
 {% endblock %}
 
