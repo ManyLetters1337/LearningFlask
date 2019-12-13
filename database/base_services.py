@@ -108,15 +108,15 @@ class BaseDBService:
         """
         return db.session.query(Project).filter_by(id=id_).first().title
 
-    def get_statistics(self, id_: int, **kwargs) -> list:
+    def get_statistics(self, id_: int, **kwargs) -> dict:
         """
         Get statistics for user projects
         :param id_: User id
         :return:
         """
-        stat_for_note = db.session.query(Note.project_id, Note.status, Project.uuid, func.count()).filter_by(user_id=id_, **kwargs). \
-            group_by(Note.project_id, Note.status).filter(Project.id == Note.project_id)
-        # statistics = []
+        stat_for_note = db.session.query(Note.project_id, Note.status, Project.uuid, func.count()).\
+            filter_by(user_id=id_, **kwargs).group_by(Note.project_id, Note.status).\
+            filter(Project.id == Note.project_id)
         check_list = []
         statistics = {}
 
