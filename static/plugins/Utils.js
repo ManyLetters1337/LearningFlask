@@ -1,6 +1,9 @@
 import {ViewChart} from './Chart.js';
 
 class UtilsClass {
+    /*
+    Get data from api
+    */
   makeRequest(method, url, callback) {
      let xhr = new XMLHttpRequest();
 
