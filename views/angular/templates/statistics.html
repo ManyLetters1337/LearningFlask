@@ -1,0 +1,20 @@
+<table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Project</th>
+                    <th>Open</th>
+                    <th>In Progress</th>
+                    <th>Resolved</th>
+                    <th>Closed</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="(key, value) in projects">
+                    <td ng-bind="key"></td>
+                    <td ng-bind="value['Open'] ? value['Open'] : 0"></td>
+                    <td ng-bind="value['In Progress'] ? value['In Progress'] : 0"></td>
+                    <td ng-bind="value['Resolved'] ? value['Resolved'] : 0"></td>
+                    <td ng-bind="value['Closed'] ? value['Closed'] : 0"></td>
+                </tr>
+            </tbody>
+        </table>
