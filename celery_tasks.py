@@ -10,9 +10,9 @@ app.config['CELERY_RESULT_BACKEND'] = 'redis://localhost:6379/0'
 app.config['MAIL_SERVER'] = 'smtp.yandex.ru'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USE_SSL'] = True
-app.config['MAIL_USERNAME'] = 'test-my-send-mail@yandex.ru'
-app.config['MAIL_PASSWORD'] = 'Lolkek1337'
-app.config['MAIL_DEFAULT_SENDER'] = 'test-my-send-mail@yandex.ru'
+app.config['MAIL_USERNAME'] = 'some-login-post@yandex.ru'
+app.config['MAIL_PASSWORD'] = 'Qwerty123'
+app.config['MAIL_DEFAULT_SENDER'] = 'some-login-post@yandex.ru'
 
 mail = Mail(app)
 

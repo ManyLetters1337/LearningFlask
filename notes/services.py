@@ -34,7 +34,7 @@ class NoteDBService(BaseDBService):
         note: Note = super(NoteDBService, self).new(title=kwargs['title'],
                                                     description=kwargs['description'],
                                                     status=kwargs['status'])
-        note.set_user(user)
+        note.set_created_by(user)
         note.set_project(kwargs['project'])
         user.note.append(note)
         note.set_uuid(uuid.uuid1().__str__())

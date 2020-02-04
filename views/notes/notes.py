@@ -42,7 +42,7 @@ def add_note():
     :return: Page with Add Note form or Page with Notes
     Page for Add Note
     """
-    form: 'NoteForm' = create_note_form()
+    form: 'NoteForm' = create_note_form(session['user_id'])
 
     return render_template('add_note.html', form=form)
 
@@ -54,9 +54,10 @@ def add_note_post():
     Post method for Add Note
     :return:
     """
-    form: 'NoteForm' = create_note_form()
+    user = services.users.get_by_id(session['user_id'])
+    form: 'NoteForm' = create_note_form(user.id)
+
     if form.validate():
-        user = services.users.get_by_id(session['user_id'])
         project = services.projects.get_by_id(form.project.data)
         note_: 'Note' = services.notes.create(
             user,
@@ -79,13 +80,16 @@ def note(uuid: str):
     :return:
     """
     note_instance: 'Note' = services.notes.get_by_uuid(uuid)
+    user = services.users.get_by_id(session['user_id'])
+
     form = create_note_form(
+        note_instance.user_id,
         description=note_instance.description,
         status=note_instance.status,
-        project=note_instance.project
+        project=note_instance.project_id
     )
 
-    return render_template('note.html', note=note_instance, form=form)
+    return render_template('note.html', note=note_instance, form=form, check_assign=(note_instance.user_id == user.id))
 
 
 @notes.route('/<uuid>', methods=['POST'])
@@ -96,18 +100,18 @@ def note_post(uuid: str):
     :param uuid:
     :return:
     """
-    form: 'NoteForm' = create_note_form()
     note_instance: 'Note' = services.notes.get_by_uuid(uuid)
+    form: 'NoteForm' = create_note_form(note_instance.user_id, project=note_instance.project_id)
+    user: 'User' = services.users.get_by_id(session['user_id'])
+    form.user.data = note_instance.user_id
 
     if form.validate():
-        user: 'User' = services.users.get_by_id(session['user_id'])
         if request.form['button'] == 'Delete':
             services.notes.delete_note(uuid, user)
+
         elif request.form['button'] == 'Assign':
-            assigned_user = services.users.get_by_id(form.user.data)
-            services.notes.assign_user(note_instance, assigned_user)
-            send_assign_mail.apply_async(args=[assigned_user.username, assigned_user.email,
-                                               url_for('notes.note', uuid=uuid, _external=True)])
+            assign_user(form, note_instance)
+
         elif request.form['button'] == 'Change':
             project = services.projects.get_by_id(request.form['project'])
             note_: 'Note' = services.notes.change_note(uuid, user, title=form.title.data,
@@ -116,4 +120,18 @@ def note_post(uuid: str):
 
         return redirect(url_for('notes.notes_page'))
 
-    return render_template('note.html', note=note_instance, form=form)
+    return render_template('note.html', note=note_instance, form=form, check_assign=(note_instance.user_id == user.id))
+
+
+def assign_user(form, note_):
+    """
+    Assign user and send email for user
+    @param note_: Note
+    @param form: Form Data
+    @return:
+    """
+    assigned_user = services.users.get_by_id(request.form['user'])
+    services.notes.assign_user(note_, assigned_user)
+
+    send_assign_mail.apply_async(args=[assigned_user.username, assigned_user.email,
+                                       url_for('notes.note', uuid=note_.uuid, _external=True)])

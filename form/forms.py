@@ -117,28 +117,29 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField()
 
 
-def create_note_form(**kwargs) -> 'NoteForm':
+def create_note_form(user_id: id, **kwargs) -> 'NoteForm':
     """
     Create Note Form
     :param kwargs:
     :return: Note form or Note form with data
+    @param user_id:
     """
     user = services.users.get_by_id(session['user_id'])
-
     form: NoteForm = NoteForm()
+
     projects = services.projects.get_projects(user)
-    users = services.users.get_all()
     form.project.choices = [(project.id, project.title) for project in projects]
+
+    users = services.users.get_all()
     form.user.choices = [(user.id, user.username) for user in users]
+    form.user.data = user_id
 
     if 'description' in kwargs:
         form.description.data = kwargs['description']
     if 'status' in kwargs:
         form.status.data = kwargs['status']
     if 'project' in kwargs:
-        form.project.data = kwargs['project'].id
-    if 'user' in kwargs:
-        form.user.data = kwargs['user'].id
+        form.project.data = kwargs['project']
 
     return form
 
@@ -158,14 +159,6 @@ class NoteForm(FlaskForm):
     user = SelectField("User", coerce=int)
     submit = SubmitField()
 
-    def serialize(self):
-        return {
-            'title': self.title,
-            'description': self.description,
-            'status': self.status,
-            'submit': self.submit
-        }
-
 
 def create_project_form(**kwargs) -> 'ProjectForm':
     """
@@ -184,32 +177,9 @@ def create_project_form(**kwargs) -> 'ProjectForm':
 
 class ProjectForm(FlaskForm):
     """
-    Note form
+    Зкщоусе form
     """
     title = StringField("Title", validators=[DataRequired()])
     description = TextAreaField("Description", validators=[])
     submit = SubmitField()
 
-
-def create_product_form(**kwargs) -> 'ProductForm':
-    """
-    Create Note Form
-    :param kwargs:
-    :return: Note form or Note form with data
-    """
-
-    form: ProductForm = ProductForm()
-
-    if 'description' in kwargs:
-        form.description.data = kwargs['description']
-
-    return form
-
-
-class ProductForm(FlaskForm):
-    """
-    Product Form
-    """
-    title = StringField("Title", validators=[DataRequired()])
-    description = TextAreaField("Description", validators=[])
-    submit = SubmitField()

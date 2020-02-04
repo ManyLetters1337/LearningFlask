@@ -29,9 +29,6 @@
             <li><a class="nav-link active" href="{{ url_for('projects.add_project') }}">Add Project</a></li>
             <li><a class="nav-link active" href="{{ url_for('projects.statistics_page') }}">Statistics</a></li>
             <li><a class="nav-link active" href="{{ url_for('angular.angular_main_page') }}">Angular</a></li>
-            <li><a class="nav-link active" href="{{ url_for('users.basket_page') }}">Basket</a></li>
-            <li><a class="nav-link active" href="{{ url_for('product.products_page') }}">Products</a></li>
-            <li><a class="nav-link active" href="{{ url_for('product.add_product') }}">Add Products</a></li>
         </ul>
         {% else %}
             <a class="nav-link active" href="{{ url_for('notes.notes_page') }}">Notes</a>

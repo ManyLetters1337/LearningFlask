@@ -36,7 +36,15 @@ class Note(db.Model):
         """
         self.project = project
 
-    def set_user(self, user: 'User'):
+    def set_created_by(self, user: 'User'):
+        """
+        Set user_id for Note Instance
+        @param user:
+        @return:
+        """
+        self.user_id = user.id
+
+    def assign_user(self, user: 'User'):
         """
         Set User for Note instance
         @param user: User Instance

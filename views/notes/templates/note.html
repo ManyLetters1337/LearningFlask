@@ -2,50 +2,69 @@
 {% block title %}Note{% endblock %}
 {% block content %}
 	<div class="content p-4">
-	{% if session['user_id'] %}
         <form method="POST">
             {{ form.csrf_token }}
                 {% if note.status == "Open" %}
+
                     <div class="alert alert-danger text-left" role="alert">
                 {% elif note.status == "In Progress" %}
+
                     <div class="alert alert-primary text-left" role="alert">
+
                 {% elif note.status == "Resolved" %}
+
                     <div class="alert alert-success text-left" role="alert">
                 {% else %}
+
                     <div class="alert alert-secondary text-left" role="alert">
                 {% endif %}
+
                 {{ form.title.label() }}
                  {{ form.title(class="form-control",  maxlength="50", value=note.title) }}
+
                     {% if form.title.errors %}
                         {% for error in form.title.errors %}
+
                             <div class="alert alert-danger mx-auto p-3 mt-3" role="alert">
                                 <spam class="{{ category }}">{{ error }}</spam>
                             </div>
+
                         {% endfor %}
                     {% endif %}
+
                 {{ form.project.label(class="mt-2")}}
                 {{ form.project(class="form-control") }}
 
-                {{ form.user.label(class="mt-2")}}
-                {{ form.user(class="form-control") }}
-                <input class="btn btn-primary mt-3" type="submit" value="Assign" name="button">
+                {% if check_assign %}
+                    {{ form.user.label(class="mt-2")}}
+                    {{ form.user(class="form-control") }}
+                    <input class="btn btn-primary mt-3" type="submit" value="Assign" name="button">
+                {% endif %}
+
                 <hr>
                {{ form.description.label() }}
                 {{ form.description(class="form-control", style="height:200px; max-height:400px; min-height:200px;", maxlength="490") }}
+
                     {% if form.description.errors %}
                         {% for error in form.description.errors %}
+
                             <div class="alert alert-danger mx-auto p-3 mt-3" role="alert">
                                 <spam class="{{ category }}">{{ error }}</spam>
                             </div>
+
                         {% endfor %}
                     {% endif %}
+
                 {{ form.status.label() }}
            {{ form.status(class="form-control", value=note.status) }}
+
            {% if form.status.errors %}
             {% for error in form.status.errors %}
+
             <div class="alert alert-danger mx-auto p-3 mt-3" role="alert">
                 <spam class="{{ category }}">{{ error }}</spam>
             </div>
+
             {% endfor %}
             {% endif %}
                 <input class="btn btn-primary mt-3" type="submit" value="Change" name="button">
@@ -53,8 +72,5 @@
                 <p class="mb-0 text-right">{{ note.created_on }}</p>
             </div>
         </form>
-	{% else %}
-	You are not logged in. <a href = "{{ url_for('auth.login') }}"> Log in </a> or <a href = "{{ url_for('auth.registration') }}"> Sign up </a>
-	{% endif %}
 	</div>
 {% endblock %}
