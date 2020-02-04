@@ -1,0 +1,36 @@
+from flask import Flask, render_template
+from celery import Celery
+from flask_mail import Mail, Message
+
+
+app = Flask(__name__)
+app.config['CELERY_BROKER_URL'] = 'redis://localhost:6379/0'
+app.config['CELERY_RESULT_BACKEND'] = 'redis://localhost:6379/0'
+
+app.config['MAIL_SERVER'] = 'smtp.yandex.ru'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USE_SSL'] = True
+app.config['MAIL_USERNAME'] = 'test-my-send-mail@yandex.ru'
+app.config['MAIL_PASSWORD'] = 'Lolkek1337'
+app.config['MAIL_DEFAULT_SENDER'] = 'test-my-send-mail@yandex.ru'
+
+mail = Mail(app)
+
+celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
+celery.conf.update(app.config)
+
+
+@celery.task()
+def send_mail(username: str, email: str):
+    with app.app_context():
+        msg = Message("Hello User", recipients=[email])
+        msg.html = render_template('email.html', username=username)
+        mail.send(msg)
+
+
+@celery.task()
+def send_assign_mail(username: str, email: str, url: str):
+    with app.app_context():
+        msg = Message("Hello User", recipients=[email])
+        msg.html = render_template('email.html', username=username, url=url)
+        mail.send(msg)

@@ -6,22 +6,24 @@ from database.base_services import BaseDBService
 from notes.models import Note
 from .models import Project
 from flask import session
+from sqlalchemy import func
+from typing import TYPE_CHECKING
 import uuid
+from users.models import User
 
 
 class ProjectDBService(BaseDBService):
     model = Project
 
-    def create(self, title: str, description: str, user_id: int) -> Project:
+    def create(self, user: User, **kwargs) -> Project:
         """
         Create project instance
-        :param title:
-        :param description:
-        :param user_id:
-        :return:
+        @param user: User instance
+        @param kwargs:
+        @return: Project instance
         """
-        project: Project = super(ProjectDBService, self).new(title=title, description=description)
-        project.set_user(user_id)
+        project: Project = super(ProjectDBService, self).new(title=kwargs['title'], description=kwargs['description'])
+        project.set_user(user)
         project.set_uuid(uuid.uuid4().__str__())
 
         self.commit()
@@ -66,25 +68,55 @@ class ProjectDBService(BaseDBService):
         """
         return db.session.query(Note).filter(Note.project_id == id_).order_by(db.desc(Note.created_on))
 
-    def get_projects(self) -> Project:
+    def get_projects(self, user: 'User') -> Project:
         """
         Get projects
         :return: List of all project
         """
-        return db.session.query(Project).all()
+        return self.filter(user=user)
 
-    def get_projects_for_user(self, user_id: int) -> Project:
+    def get_projects_for_user(self, user: User) -> Project:
         """
         Get projects for current user
-        :param user_id:
+        :param user:
         :return: List of projects for user
         """
-        return self.filter(user_id=user_id).order_by(db.desc(Project.created_on))
+        return self.filter(user=user).order_by(db.desc(Project.created_on))
 
-    def get_projects_for_form(self, user_id: int) -> Project:
+    def get_projects_for_form(self, user: User) -> Project:
         """
         Get projects for form
-        :param user_id:
+        :param user: User Instance
         :return: List of projects for form
         """
-        return self.filter(user_id=user_id).all()
+        return self.filter(user=user).all()
+
+    def get_statistics(self, user: User, **kwargs) -> dict:
+        """
+        Get statistics for user projects
+        :param user: User instance
+        :return:
+        """
+        stat_for_note = db.session.query(Note.project_id, Note.status, Project.uuid, func.count()).\
+            filter(self.model.user.has(id=user.id)).filter_by(**kwargs).group_by(Note.project_id, Note.status).\
+            filter(Project.id == Note.project_id)
+        check_list = set()
+        statistics = {}
+
+        for values in stat_for_note:
+            status_and_counts = {}
+
+            if values[0] in check_list:
+                continue
+
+            project_title = self.get_title_by_id(values[0])
+
+            for some in stat_for_note:
+
+                if self.get_title_by_id(some[0]) == project_title:
+                    status_and_counts['uuid'] = some[2]
+                    status_and_counts[some[1]] = some[3]
+
+            statistics[project_title] = status_and_counts
+            check_list.add(values[0])
+        return statistics

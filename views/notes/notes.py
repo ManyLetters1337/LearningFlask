@@ -1,11 +1,12 @@
 """
 Views for Note Class
 """
-from app import page_size
+from config import page_size
 from flask import url_for, render_template, redirect, session, request, Blueprint
 from form.forms import create_note_form
 from database.service_registry import services
 from flask_login import login_required
+from celery_tasks import send_assign_mail
 
 from typing import TYPE_CHECKING
 
@@ -24,7 +25,8 @@ def notes_page():
     :return: Page with notes
     """
     page = int(request.args.get('page', default=1))
-    notes_for_user = services.notes.get_notes_for_user(session["user_id"])
+    user = services.users.get_by_id(session['user_id'])
+    notes_for_user = services.notes.get_notes_for_user(user)
 
     return render_template(
         "/notes.html",
@@ -54,12 +56,14 @@ def add_note_post():
     """
     form: 'NoteForm' = create_note_form()
     if form.validate():
+        user = services.users.get_by_id(session['user_id'])
+        project = services.projects.get_by_id(form.project.data)
         note_: 'Note' = services.notes.create(
-            session['user_id'],
+            user,
             title=form.title.data,
             description=form.description.data,
             status=form.status.data,
-            project_id=form.project.data
+            project=project
         )
         return redirect(url_for('notes.notes_page'))
 
@@ -78,7 +82,7 @@ def note(uuid: str):
     form = create_note_form(
         description=note_instance.description,
         status=note_instance.status,
-        project=note_instance.project_id
+        project=note_instance.project
     )
 
     return render_template('note.html', note=note_instance, form=form)
@@ -96,11 +100,19 @@ def note_post(uuid: str):
     note_instance: 'Note' = services.notes.get_by_uuid(uuid)
 
     if form.validate():
+        user: 'User' = services.users.get_by_id(session['user_id'])
         if request.form['button'] == 'Delete':
-            services.notes.delete_note(uuid)
+            services.notes.delete_note(uuid, user)
+        elif request.form['button'] == 'Assign':
+            assigned_user = services.users.get_by_id(form.user.data)
+            services.notes.assign_user(note_instance, assigned_user)
+            send_assign_mail.apply_async(args=[assigned_user.username, assigned_user.email,
+                                               url_for('notes.note', uuid=uuid, _external=True)])
         elif request.form['button'] == 'Change':
-            note_: 'Note' = services.notes.change_note(uuid, title=form.title.data, description=request.form['description'],
-                                                       status=request.form['status'], project=request.form['project'])
+            project = services.projects.get_by_id(request.form['project'])
+            note_: 'Note' = services.notes.change_note(uuid, user, title=form.title.data,
+                                                       description=request.form['description'],
+                                                       status=request.form['status'], project=project)
 
         return redirect(url_for('notes.notes_page'))
 

@@ -4,7 +4,6 @@ import {ViewChart} from './Chart.js';
 document.addEventListener("DOMContentLoaded", function(event) { 
 	
 	Utils.makeRequest('GET', 'http://' + window.location.host + '/api' + window.location.pathname, function(data) {
-	    let result = [];
 	    let project;
 
 	    for (let key in data){
@@ -13,6 +12,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 	    let chart = new ViewChart(data[project]);
 	    
-	    chart.create_chart();
+	    chart.createChart();
 	});
 });

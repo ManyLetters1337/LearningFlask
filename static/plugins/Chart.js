@@ -17,12 +17,12 @@ export class ViewChart{
 		this.status_data = statuses;
 	};
 
-	get_canvas(){
+	getCanvas(){
 
 		return document.getElementById('donutChart').getContext('2d');
 	};
 
-	set_params(){
+	setParams(){
 		let donutData = {
 	    labels: [
 	      STATUSES.Open,
@@ -45,11 +45,11 @@ export class ViewChart{
 	    return donutData;
 	}
 
-	create_chart(){
+	createChart(){
 	  
-	    let donutChartCanvas = this.get_canvas();
+	    let donutChartCanvas = this.getCanvas();
 	    
-	    let donutData  = this.set_params();
+	    let donutData  = this.setParams();
 
 	    let donutOptions = {
 	        maintainAspectRatio : false,

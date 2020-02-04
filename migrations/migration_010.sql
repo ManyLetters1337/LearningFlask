@@ -1,0 +1,11 @@
+CREATE TABLE product
+( id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  uuid VARCHAR(36) NOT NULL UNIQUE,
+  user_id INT UNSIGNED,
+  title VARCHAR(50) NOT NULL,
+  description VARCHAR(500),
+  CONSTRAINT `fk_product_basket_id` FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+)
+CHARACTER SET utf8;
+
+

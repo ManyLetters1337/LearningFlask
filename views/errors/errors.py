@@ -1,8 +1,7 @@
 """
 Errors view class
 """
-from app import app
-from flask import render_template, request, redirect, Blueprint
+from flask import render_template, Blueprint
 
 errors = Blueprint('errors', __name__)
 

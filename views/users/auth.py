@@ -3,20 +3,21 @@ Authentication views for User Class
 """
 from typing import TYPE_CHECKING
 from flask import flash, url_for, render_template, redirect, request, Blueprint
-from app import app
+from create_app import login_manager
 from form.forms import create_login_form, create_registration_form
 from database.service_registry import services
-from flask_login import login_required, logout_user, LoginManager, login_user
+from flask_login import login_required, logout_user, login_user
+from celery_tasks import send_mail
 
 if TYPE_CHECKING:
     from users.models import User
     from form.forms import LoginForm
     from form.forms import RegistrationForm
 
-login_manager = LoginManager(app)
 login_manager.login_view = 'auth.login'
 
 auth = Blueprint('auth', __name__, template_folder='templates')
+
 
 @login_manager.user_loader
 def load_user(user_id: int) -> 'User':
@@ -74,6 +75,7 @@ def registration_post():
 
     if form.validate_on_submit():
         user: 'User' = services.users.create(form.username.data, form.email.data, form.password.data)
+        send_mail.apply_async(args=[user.username, user.email])
         return redirect(request.args.get('next') or url_for('notes.notes_page'))
 
     return render_template('/auth/registration.html', form=form)

@@ -15,7 +15,7 @@ class UserDBService(BaseDBService):
         """
         Get password_hash for user
         :param username:
-        :return: Password_hash or
+        :return: Password_hash
         """
         try:
             return self.filter(username=username).first().password_hash
@@ -42,6 +42,17 @@ class UserDBService(BaseDBService):
         """
         try:
             return self.filter(username=username).first()
+        except NoResultFound as e:
+            raise NotFound()
+
+    def get_user_by_email(self, email: str) -> User:
+        """
+        Get User by Email
+        @param email:
+        @return:
+        """
+        try:
+            return self.filter(email=email).first()
         except NoResultFound as e:
             raise NotFound()
 

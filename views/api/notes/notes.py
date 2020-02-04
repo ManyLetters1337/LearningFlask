@@ -2,7 +2,7 @@ from flask import session, request, jsonify, Blueprint
 from database.service_registry import services
 from flask_login import login_required
 from typing import TYPE_CHECKING
-from app import page_size
+from config import page_size
 
 if TYPE_CHECKING:
     from notes.models import Note
@@ -18,7 +18,8 @@ def notes_page():
     :return:
     """
     page = int(request.args.get('page', default=1))
-    notes = services.notes.apply_pagination(services.notes.get_notes_for_user(session["user_id"]), page, page_size)
+    user = services.users.get_by_id(session['user_id'])
+    notes = services.notes.apply_pagination(services.notes.get_notes_for_user(user), page, page_size)
 
     return jsonify(notes=[note.serialize() for note in notes.items])
 

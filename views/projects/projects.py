@@ -1,7 +1,7 @@
 """
 Views for Project Class
 """
-from app import page_size
+from config import page_size
 from flask import url_for, render_template, redirect, session, request, Blueprint
 from form.forms import create_project_form
 from database.service_registry import services
@@ -23,12 +23,11 @@ def projects_page():
     :return:
     """
     page = int(request.args.get('page', default=1))
-    if 'user_id' in session:
-        project_for_user = services.projects.get_projects_for_user(session["user_id"])
-        return render_template("projects.html",
-                               projects=services.projects.apply_pagination(project_for_user, page, page_size))
-    else:
-        return render_template("projects.html")
+    user = services.users.get_by_id(session['user_id'])
+    project_for_user = services.projects.get_projects_for_user(user)
+
+    return render_template("projects.html",
+                           projects=services.projects.apply_pagination(project_for_user, page, page_size))
 
 
 @projects.route('/add_project', methods=['GET'])
@@ -51,8 +50,9 @@ def add_project_post():
     :return:
     """
     form: 'ProjectForm' = create_project_form()
+    user = services.users.get_by_id(session['user_id'])
 
-    project_: 'Project' = services.projects.create(form.title.data, form.description.data, session['user_id'])
+    project_: 'Project' = services.projects.create(user, title=form.title.data, description=form.description.data)
 
     return redirect(url_for('projects.projects_page'))
 
@@ -68,10 +68,10 @@ def project(uuid: str):
     page = int(request.args.get('page', default=1))
     project_ = services.projects.get_by_uuid(uuid)
 
-    form: 'ProjectForm' = create_project_form(description=project_.description)
+    form: ProjectForm = create_project_form(description=project_.description)
 
-    notes_for_user = services.projects.get_notes_for_project(project_.id)
-    notes = services.notes.apply_pagination(notes_for_user, page, page_size)
+    notes_for_project = services.projects.get_notes_for_project(project_.id)
+    notes = services.notes.apply_pagination(notes_for_project, page, page_size)
 
     return render_template('project.html', project=project_, form=form, notes=notes)
 
@@ -87,8 +87,8 @@ def project_post(uuid: str):
     page = int(request.args.get('page', default=1))
     project_ = services.projects.get_by_uuid(uuid)
     form: 'ProjectForm' = create_project_form(description=project_.description)
-    notes_for_user = services.projects.get_notes_for_project(project_.id)
-    notes = services.notes.apply_pagination(notes_for_user, page, page_size)
+    notes_for_project = services.projects.get_notes_for_project(project_.id)
+    notes = services.notes.apply_pagination(notes_for_project, page, page_size)
 
     if form.validate():
         if request.form['button'] == 'Delete':
@@ -108,7 +108,8 @@ def statistics_page():
     Page with statisctics for user projects
     :return:
     """
-    return render_template("statistics/statistics.html", stat=services.users.get_statistics(session['user_id']))
+    user = services.users.get_by_id(session['user_id'])
+    return render_template("statistics/statistics.html", stat=services.projects.get_statistics(user))
 
 
 @projects.route('/statistics/<uuid>', methods=['GET'])
@@ -120,6 +121,7 @@ def statistics_for_project_page(uuid: str):
     :return:
     """
     project_id = services.projects.get_by_uuid(uuid).id
-    return render_template("statistics/current_project.html", stat=services.users.get_statistics(session['user_id'],
+    user = services.users.get_by_id(session['user_id'])
+    return render_template("statistics/current_project.html", stat=services.projects.get_statistics(user,
                                                                                                  project_id=project_id))
 

@@ -3,9 +3,7 @@
 """
 from sqlalchemy.orm import Query
 from sqlalchemy.orm.exc import NoResultFound
-from sqlalchemy import func, case
 from werkzeug.exceptions import NotFound
-from notes.models import Note
 from projects.models import Project
 from .core import db
 from typing import Union
@@ -55,6 +53,13 @@ class BaseDBService:
         """
         return db.session.query(self.model).filter_by(uuid=uuid_).first()
 
+    def get_all(self):
+        """
+        Get all instance
+        @return:
+        """
+        return db.session.query(self.model).all()
+
     def get_uuid_by_id(self, id_: int) -> uuid:
         """
         Get uuid by id
@@ -71,27 +76,38 @@ class BaseDBService:
         """
         return db.session.query(self.model).filter_by(**kwargs)
 
-    def apply_pagination(self, query: Query, start: int, page_size: int) -> Query:
+    def apply_pagination(self, query: Query, start_page: int, page_size: int) -> Query:
         """
         Apply pagination for page
         :param query:
-        :param start:
+        :param start_page:
         :param page_size:
         :return:
         """
-        return query.paginate(start, page_size, True)
+        start_page = self.validate_page_size(start_page)
+        return query.paginate(start_page, page_size)
 
     def new(self, **kwargs) -> db.Model:
         """
         Create instance
-        :param kwargs:
-        :return:
+        :param kwargs: Params for Instance
+        :return: Instance
         """
         instance = self.model(**kwargs)
 
         db.session.add(instance)
 
         return instance
+
+    def validate_page_size(self, start_page):
+        """
+        Validate start page
+        @param start_page:
+        @return: Validate start page
+        """
+        if start_page < 1:
+            start_page = 1
+        return start_page
 
     def commit(self):
         """
@@ -107,30 +123,3 @@ class BaseDBService:
         :return: Title for this instance
         """
         return db.session.query(Project).filter_by(id=id_).first().title
-
-    def get_statistics(self, id_: int, **kwargs) -> dict:
-        """
-        Get statistics for user projects
-        :param id_: User id
-        :return:
-        """
-        stat_for_note = db.session.query(Note.project_id, Note.status, Project.uuid, func.count()).\
-            filter_by(user_id=id_, **kwargs).group_by(Note.project_id, Note.status).\
-            filter(Project.id == Note.project_id)
-        check_list = []
-        statistics = {}
-
-        for values in stat_for_note:
-            status_and_counts = {}
-
-            if values[0] in check_list:
-                continue
-
-            project_title = self.get_title_by_id(values[0])
-            for some in stat_for_note:
-                if self.get_title_by_id(some[0]) == project_title:
-                    status_and_counts['uuid'] = some[2]
-                    status_and_counts[some[1]] = some[3]
-            statistics[project_title] = status_and_counts
-            check_list.append(values[0])
-        return statistics

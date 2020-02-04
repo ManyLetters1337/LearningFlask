@@ -25,6 +25,10 @@
                     {% endif %}
                 {{ form.project.label(class="mt-2")}}
                 {{ form.project(class="form-control") }}
+
+                {{ form.user.label(class="mt-2")}}
+                {{ form.user(class="form-control") }}
+                <input class="btn btn-primary mt-3" type="submit" value="Assign" name="button">
                 <hr>
                {{ form.description.label() }}
                 {{ form.description(class="form-control", style="height:200px; max-height:400px; min-height:200px;", maxlength="490") }}

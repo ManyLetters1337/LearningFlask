@@ -3,6 +3,7 @@ Project Class
 """
 from database.core import db
 from datetime import datetime
+import uuid
 
 
 class Project(db.Model):
@@ -11,11 +12,12 @@ class Project(db.Model):
     """
     __tablename__ = 'projects'
     id = db.Column(db.Integer(), primary_key=True)
-    uuid = db.Column(db.String(), nullable=False, unique=True)
+    uuid = db.Column(db.String(50), default=uuid.uuid4().__str__(), unique=True)
     user_id = db.Column(db.Integer(), db.ForeignKey('users.id'))
     title = db.Column(db.String(255), nullable=False)
     description = db.Column(db.String(500), nullable=True)
     created_on = db.Column(db.DateTime(), default=datetime.now)
+    notes = db.relationship('Note', backref='project', lazy=True)
 
     def set_uuid(self, uuid_):
         """
@@ -24,12 +26,12 @@ class Project(db.Model):
         """
         self.uuid = uuid_
 
-    def set_user(self, id_):
+    def set_user(self, user):
         """
         Set user_id in project
         :param id_:
         """
-        self.user_id = id_
+        self.user = user
 
     def serialize(self):
         return {

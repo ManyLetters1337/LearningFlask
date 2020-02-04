@@ -26,3 +26,10 @@ def angular_cars_list():
 @login_required
 def angular_statistics():
     return render_template("/statistics.html")
+
+
+@angular.route('/templates/validationErrors.html', methods=['GET'])
+@login_required
+def validation():
+    return render_template("/validationErrors.html")
+

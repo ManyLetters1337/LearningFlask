@@ -3,27 +3,27 @@
 {% block content %}
 	<div class="content p-4">
 		{% if notes.items|length > 0 %}
-			{% for some in notes.items %}
-				<a class="" style="text-decoration: none" href="{{ url_for('notes.note', uuid=some.uuid) }}">
-					{% if some.status == "Open" %}
+			{% for note in notes.items %}
+				<a class="" style="text-decoration: none" href="{{ url_for('notes.note', uuid=note.uuid) }}">
+					{% if note.status == "Open" %}
 						<div class="alert alert-danger text-left" role="alert">
-					{% elif some.status == "In Progress" %}
+					{% elif note.status == "In Progress" %}
 						<div class="alert alert-primary text-left" role="alert">
-					{% elif some.status == "Resolved" %}
+					{% elif note.status == "Resolved" %}
 						<div class="alert alert-success text-left" role="alert">
 					{% else %}
 						<div class="alert alert-secondary text-left" role="alert">
 					{% endif %}
 						<ul class="m-0 p-0 " style="list-style-type: none;">
-						<li><h4 class="nav-item active alert-heading " name="title">{{ some.title }}</h4></li>
-                        <li>Status: {{ some.status }}</li>
+						<li><h4 class="nav-item active alert-heading " name="title">{{ note.title }}</h4></li>
+                        <li>Status: {{ note.status }}</li>
                         </ul>
 						<hr>
-						{% if some.description|length > 0 %}
-							<p name="description">{{ some.description }}</p>
+						{% if note.description|length > 0 %}
+							<p name="description">{{ note.description }}</p>
 							<hr>
 						{% endif %}
-						<p class="mb-0 text-right">{{ some.created_on }}</p>
+						<p class="mb-0 text-right">{{ note.created_on }}</p>
 					</div>
 				</a>
 			{% endfor %}

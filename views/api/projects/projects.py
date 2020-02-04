@@ -1,7 +1,7 @@
 from flask import session, jsonify, Blueprint, request
 from database.service_registry import services
 from flask_login import login_required
-from app import page_size
+from config import page_size
 
 api_projects = Blueprint('api_projects', __name__, url_prefix='/projects')
 
@@ -14,7 +14,8 @@ def projects_page():
     :return:
     """
     page = int(request.args.get('page', default=1))
-    projects = services.projects.apply_pagination(services.projects.get_projects_for_user(session['user_id']), page, page_size)
+    user = services.users.get_by_id(session['user_id'])
+    projects = services.projects.apply_pagination(services.projects.get_projects_for_user(user), page, page_size)
 
     return jsonify(projects=[project.serialize() for project in projects.items])
 
@@ -40,7 +41,8 @@ def statistics_page():
     Get method for Statistics Page
     :return:
     """
-    statistics = services.projects.get_statistics(session['user_id'])
+    user = services.users.get_by_id(session['user_id'])
+    statistics = services.projects.get_statistics(user)
 
     return jsonify(statistics)
 
@@ -53,7 +55,8 @@ def statistics_for_project_page(uuid: str):
     :return:
     """
     project_id = services.projects.get_by_uuid(uuid).id
-    statistics = services.projects.get_statistics(session['user_id'], project_id=project_id)
+    user = services.users.get_by_id(session['user_id'])
+    statistics = services.projects.get_statistics(user, project_id=project_id)
 
     return jsonify(statistics)
 

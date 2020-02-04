@@ -8,4 +8,5 @@ CREATE TABLE projects
   CONSTRAINT `fk_projects_user_id` FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
+ALTER TABLE notes ADD CONSTRAINT `fk_notes_project_id` FOREIGN KEY (project_id) REFERENCES projects (id) ON DELETE CASCADE;
 

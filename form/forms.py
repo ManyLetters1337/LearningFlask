@@ -1,7 +1,7 @@
 """
 Forms with validators for these forms
 """
-from enum import Enum
+from config import Statuses
 from flask import flash, session
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, BooleanField, PasswordField, SelectField
@@ -83,6 +83,19 @@ def check_user_in_db_reg(form, field):
         raise ValidationError(message)
 
 
+def check_email_in_db(form, field):
+    """
+    Checking the presence of a user in the database
+    @param form:
+    @param field:
+    @return:
+    """
+    message = "User with this email already exist"
+    if services.users.get_user_by_email(field.data):
+        flash(message)
+        raise ValidationError(message)
+
+
 def create_registration_form():
     """
     Create registration form
@@ -98,15 +111,10 @@ class RegistrationForm(FlaskForm):
     Registration form
     """
     username = StringField("Username", validators=[DataRequired(), check_user_in_db_reg])
-    email = StringField("Email", validators=[Email()])
+    email = StringField("Email", validators=[Email(), check_email_in_db])
     password = PasswordField("Password", validators=[DataRequired(), check_password])
     password_repeat = PasswordField("Password Repeat")
     submit = SubmitField()
-
-
-def project_choices():
-    projects = services.projects.get_projects()
-    return [(project.id, project.title) for project in projects]
 
 
 def create_note_form(**kwargs) -> 'NoteForm':
@@ -115,26 +123,24 @@ def create_note_form(**kwargs) -> 'NoteForm':
     :param kwargs:
     :return: Note form or Note form with data
     """
-    projects = services.projects.get_projects_for_form(session['user_id'])
+    user = services.users.get_by_id(session['user_id'])
 
     form: NoteForm = NoteForm()
-    form.set_choices(projects)
+    projects = services.projects.get_projects(user)
+    users = services.users.get_all()
+    form.project.choices = [(project.id, project.title) for project in projects]
+    form.user.choices = [(user.id, user.username) for user in users]
 
     if 'description' in kwargs:
         form.description.data = kwargs['description']
     if 'status' in kwargs:
         form.status.data = kwargs['status']
     if 'project' in kwargs:
-        form.project.data = kwargs['project']
+        form.project.data = kwargs['project'].id
+    if 'user' in kwargs:
+        form.user.data = kwargs['user'].id
 
     return form
-
-
-class Statuses(Enum):
-    OPEN = 'Open'
-    CLOSED = 'Closed'
-    IN_PROGRESS = 'In Progress'
-    RESOLVED = 'Resolved'
 
 
 class NoteForm(FlaskForm):
@@ -148,11 +154,9 @@ class NoteForm(FlaskForm):
                                             (Statuses.RESOLVED.value, Statuses.RESOLVED.value),
                                             (Statuses.CLOSED.value, Statuses.CLOSED.value)], validators=[]
                          )
-    project = SelectField("Project", coerce=int, choices=project_choices())
+    project = SelectField("Project", coerce=int)
+    user = SelectField("User", coerce=int)
     submit = SubmitField()
-
-    def set_choices(self, projects):
-        self.project.choices = [(project.id, project.title) for project in projects]
 
     def serialize(self):
         return {
@@ -181,6 +185,30 @@ def create_project_form(**kwargs) -> 'ProjectForm':
 class ProjectForm(FlaskForm):
     """
     Note form
+    """
+    title = StringField("Title", validators=[DataRequired()])
+    description = TextAreaField("Description", validators=[])
+    submit = SubmitField()
+
+
+def create_product_form(**kwargs) -> 'ProductForm':
+    """
+    Create Note Form
+    :param kwargs:
+    :return: Note form or Note form with data
+    """
+
+    form: ProductForm = ProductForm()
+
+    if 'description' in kwargs:
+        form.description.data = kwargs['description']
+
+    return form
+
+
+class ProductForm(FlaskForm):
+    """
+    Product Form
     """
     title = StringField("Title", validators=[DataRequired()])
     description = TextAreaField("Description", validators=[])
