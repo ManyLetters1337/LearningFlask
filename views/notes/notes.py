@@ -81,6 +81,7 @@ def note(uuid: str):
     """
     note_instance: 'Note' = services.notes.get_by_uuid(uuid)
     user = services.users.get_by_id(session['user_id'])
+    users = note_instance.user
 
     form = create_note_form(
         note_instance.user_id,
@@ -89,7 +90,7 @@ def note(uuid: str):
         project=note_instance.project_id
     )
 
-    return render_template('note.html', note=note_instance, form=form, check_assign=(note_instance.user_id == user.id))
+    return render_template('note.html', note=note_instance, form=form, users=users, check_assign=(note_instance.user_id == user.id))
 
 
 @notes.route('/<uuid>', methods=['POST'])

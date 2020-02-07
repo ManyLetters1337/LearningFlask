@@ -24,7 +24,7 @@ celery.conf.update(app.config)
 def send_mail(username: str, email: str):
     with app.app_context():
         msg = Message("Hello User", recipients=[email])
-        msg.html = render_template('email.html', username=username)
+        msg.html = render_template('mail_assign_user.html', username=username)
         mail.send(msg)
 
 
@@ -32,5 +32,13 @@ def send_mail(username: str, email: str):
 def send_assign_mail(username: str, email: str, url: str):
     with app.app_context():
         msg = Message("Hello User", recipients=[email])
-        msg.html = render_template('email.html', username=username, url=url)
+        msg.html = render_template('mail_assign_user.html', username=username, url=url)
+        mail.send(msg)
+
+
+@celery.task()
+def send_reset_password_email(username: str, email: str, url: str):
+    with app.app_context():
+        msg = Message("Reset Password", recipients=[email])
+        msg.html = render_template('mail_reset_password.html', username=username, url=url)
         mail.send(msg)

@@ -31,14 +31,17 @@
 
                         {% endfor %}
                     {% endif %}
-
-                {{ form.project.label(class="mt-2")}}
-                {{ form.project(class="form-control") }}
-
                 {% if check_assign %}
+                    {{ form.project.label(class="mt-2")}}
+                    {{ form.project(class="form-control") }}
+
                     {{ form.user.label(class="mt-2")}}
                     {{ form.user(class="form-control") }}
-                    <input class="btn btn-primary mt-3" type="submit" value="Assign" name="button">
+                        <p></p>
+                    {% for user in users %}
+                        {{ user.username }}
+                    {% endfor %}
+                        <p><input class="btn btn-primary mt-3" type="submit" value="Assign" name="button"></p>
                 {% endif %}
 
                 <hr>
@@ -68,7 +71,9 @@
             {% endfor %}
             {% endif %}
                 <input class="btn btn-primary mt-3" type="submit" value="Change" name="button">
+            {% if check_assign %}
                 <input class="btn btn-primary mt-3" type="submit" value="Delete" name="button">
+            {% endif %}
                 <p class="mb-0 text-right">{{ note.created_on }}</p>
             </div>
         </form>

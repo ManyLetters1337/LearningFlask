@@ -4,6 +4,9 @@ User Class
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash
 from database.core import db
+from time import time
+from config import secret_key
+import jwt
 import uuid
 
 
@@ -39,6 +42,15 @@ class User(db.Model, UserMixin):
         :param password:
         """
         self.password_hash = generate_password_hash(password)
+
+    def get_reset_password_token(self, expire_in=600):
+        """
+        Get Reset Password Token for User
+        @param expire_in:
+        @return:
+        """
+        return jwt.encode({'reset_password': self.id, 'exp': time() + expire_in},
+                          secret_key, algorithm='HS256').decode('utf-8')
 
     def serialize(self):
         return {

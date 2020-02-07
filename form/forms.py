@@ -144,6 +144,19 @@ def create_note_form(user_id: id, **kwargs) -> 'NoteForm':
     return form
 
 
+def check_user_with_email(form, field):
+    """
+    Check user with email in database
+    @param form:
+    @param field:
+    @return:
+    """
+    if not services.users.get_user_by_email(field.data):
+        message = "User with this email dose not exist"
+        flash(message)
+        raise ValidationError(message)
+
+
 class NoteForm(FlaskForm):
     """
     Note form
@@ -177,9 +190,25 @@ def create_project_form(**kwargs) -> 'ProjectForm':
 
 class ProjectForm(FlaskForm):
     """
-    Зкщоусе form
+    Project form
     """
     title = StringField("Title", validators=[DataRequired()])
     description = TextAreaField("Description", validators=[])
     submit = SubmitField()
 
+
+class ResetPassword(FlaskForm):
+    """
+    Reset Password Form
+    """
+    password = PasswordField("Password", validators=[DataRequired(), check_password])
+    password_repeat = PasswordField("Password Repeat")
+    submit = SubmitField()
+
+
+class ResetPasswordRequest(FlaskForm):
+    """
+    Reset Password Request Form
+    """
+    email = StringField("Email", validators=[Email(), check_user_with_email])
+    submit = SubmitField()

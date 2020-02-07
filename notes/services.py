@@ -67,7 +67,7 @@ class NoteDBService(BaseDBService):
 
         db.session.delete(note)
 
-        if user in note.user:
+        if note.user_id == user.id:
             self.commit()
 
     def change_note(self, uuid_: str, user: 'User', **kwargs) -> Note:
