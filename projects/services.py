@@ -22,7 +22,7 @@ class ProjectDBService(BaseDBService):
         @param kwargs:
         @return: Project instance
         """
-        project: Project = super(ProjectDBService, self).new(title=kwargs['title'], description=kwargs['description'])
+        project: Project = super().new(title=kwargs['title'], description=kwargs['description'])
         project.set_user(user)
         project.set_uuid(uuid.uuid4().__str__())
 

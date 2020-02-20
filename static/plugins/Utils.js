@@ -10,7 +10,7 @@ class UtilsClass {
      xhr.open(method, url, false);
      try {
         xhr.send();
-        if (xhr.status != 200) {
+        if (xhr.status !== 200) {
           alert(`Error ${xhr.status}: ${xhr.statusText}`);
             }
         else {

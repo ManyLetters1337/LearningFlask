@@ -1,0 +1,65 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-1">
+            <h5>Username:</h5>
+            <h6 class="font-italic" ng-bind="usersData['username']"></h6>
+            <p>
+            <h5>ID:</h5>
+            <h6 class="font-italic" ng-bind="usersData['id']"></h6>
+        </div>
+        <div class="col-sm-3" id="userID">
+            <h5>Email:</h5>
+            <h6 class="font-italic" ng-bind="usersData['email']"></h6>
+            <p>
+            <h5>UUID:</h5>
+            <h6 class="font-italic" ng-bind="usersData['uuid']"></h6>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-sm-5">
+            <h4>Projects:</h4>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Created On</th>
+                        <th scope="col">UUID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="value in projects">
+                        <th scope="row">{{ $index + 1 }}</th>
+                        <td ng-bind="value['title']"></td>
+                        <td ng-bind="value['created_on'].slice(4, 16)"></td>
+                        <td ng-bind="value['uuid']"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-sm-6">
+            <h4>Notes:</h4>
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Title</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Created On</th>
+                        <th scope="col">UUID</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="value in notes | orderBy: 'status'">
+                        <th scope="row">{{ $index + 1 }}</th>
+                        <td ng-bind="value['title']"></td>
+                        <td ng-bind="value['status']"></td>
+                        <td ng-bind="value['created_on'].slice(4, 16)"></td>
+                        <td ng-bind="value['uuid']"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

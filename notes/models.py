@@ -60,5 +60,6 @@ class Note(db.Model):
             'title': self.title,
             'description': self.description,
             'status': self.status,
-            'created_on': self.created_on
+            'created_on': self.created_on,
+            'project': self.project.serialize()
         }

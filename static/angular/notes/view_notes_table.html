@@ -1,0 +1,20 @@
+<table class="table" id="notes">
+    <thead class="thead-inverse">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Title</th>
+            <th scope="col">Project</th>
+            <th scope="col">Status</th>
+            <th scope="col">Created</th>
+        </tr>
+    </thead>
+    <tbody ng-repeat="(key, value) in notesData">
+        <tr ui-sref="noteInformation({ uuid: value['uuid'] })">
+            <th scope="row">{{ $index + 1 }}</th>
+            <td ng-bind="value['title']"></td>
+            <td ng-bind="value['project']['title']"></td>
+            <td ng-bind="value['status']"></td>
+            <td ng-bind="value['created_on'].slice(4, 16)"></td>
+        </tr>
+    </tbody>
+</table>

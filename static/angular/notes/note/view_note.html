@@ -1,0 +1,25 @@
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-sm-2">
+            <h5>Title:</h5>
+            <h6 class="font-italic" ng-bind="note['title']"></h6>
+            <h5>UUID:</h5>
+            <h6 class="font-italic" ng-bind="note['uuid']"></h6>
+        </div>
+        <div class="col-sm-2">
+            <h5>Project:</h5>
+            <h6 class="font-italic" ng-bind="note['project']['title']"></h6>
+            <h5>Project Created:</h5>
+            <h6 class="font-italic" ng-bind="note['project']['created_on'].slice(4,16)"></h6>
+        </div>
+    </div>
+    <p>
+    <div class="row">
+        <div class="col-sm-2">
+            <h5>Created:</h5>
+            <h6 class="font-italic" ng-bind="note['created_on']"></h6>
+            <h5>Description:</h5>
+            <h6 class="font-italic" ng-bind="note['description']"></h6>
+        </div>
+    </div>
+</div>

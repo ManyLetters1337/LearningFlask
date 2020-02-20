@@ -17,7 +17,7 @@ def projects_page():
     user = services.users.get_by_id(session['user_id'])
     projects = services.projects.apply_pagination(services.projects.get_projects_for_user(user), page, page_size)
 
-    return jsonify(projects=[project.serialize() for project in projects.items])
+    return jsonify(projects=[(project.serialize(), project.user.username) for project in projects.items])
 
 
 @api_projects.route('/<uuid>', methods=['GET'])
@@ -31,7 +31,7 @@ def project_page(uuid: str):
     project = services.projects.get_by_uuid(uuid)
     notes = services.notes.apply_pagination(services.projects.get_notes_for_project(project.id), page, page_size)
 
-    return jsonify(notes=[note.serialize() for note in notes.items], project=project.serialize())
+    return jsonify(notes=[note.serialize() for note in notes.items], user=project.user.serialize(), project=project.serialize())
 
 
 @api_projects.route('/statistics', methods=['GET'])
@@ -61,4 +61,14 @@ def statistics_for_project_page(uuid: str):
     return jsonify(statistics)
 
 
+@api_projects.route('/all_projects', methods=['GET'])
+@login_required
+def get_all_projects():
+    """
+    Get All Projects Data
+    @return:
+    """
 
+    projects = services.projects.get_all()
+
+    return jsonify([project.serialize() for project in projects])

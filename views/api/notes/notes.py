@@ -34,3 +34,14 @@ def note_page(uuid: str):
     """
     note_: 'Note' = services.notes.get_by_uuid(uuid)
     return jsonify(note_.serialize())
+
+
+@api_notes.route('/all', methods=['GET'])
+@login_required
+def get_all_note():
+    """
+    Get all Notes
+    @return:
+    """
+    notes = services.notes.get_all()
+    return jsonify([note.serialize() for note in notes])

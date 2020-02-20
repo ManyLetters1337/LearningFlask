@@ -10,6 +10,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	    	project = key;
 	    }
 
+	    console.log(data[project]);
 	    let chart = new ViewChart(data[project]);
 	    
 	    chart.createChart();

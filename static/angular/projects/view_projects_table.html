@@ -1,0 +1,18 @@
+<table class="table" id="projects">
+    <thead class="thead-inverse">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Title</th>
+            <th scope="col">Created By</th>
+            <th scope="col">Created</th>
+        </tr>
+    </thead>
+    <tbody ng-repeat="(key, value) in projectsData">
+        <tr ui-sref="projectInformation({ uuid: value['uuid'] })">
+            <th scope="row">{{ $index + 1 }}</th>
+            <td ng-bind="value['title']"></td>
+            <td ng-bind="value['user']['username']"></td>
+            <td ng-bind="value['created_on'].slice(4, 16)"></td>
+        </tr>
+    </tbody>
+</table>

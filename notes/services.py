@@ -31,7 +31,7 @@ class NoteDBService(BaseDBService):
         @param kwargs:
         @return:
         """
-        note: Note = super(NoteDBService, self).new(title=kwargs['title'],
+        note: Note = super().new(title=kwargs['title'],
                                                     description=kwargs['description'],
                                                     status=kwargs['status'])
         note.set_created_by(user)

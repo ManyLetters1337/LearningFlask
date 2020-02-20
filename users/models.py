@@ -58,6 +58,5 @@ class User(db.Model, UserMixin):
             'uuid': self.uuid,
             'username': self.username,
             'email': self.email,
-            'password_hash': self.password_hash
         }
 

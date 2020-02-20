@@ -1,0 +1,17 @@
+<table class="table" id="users">
+    <thead class="thead-inverse">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">User name</th>
+            <th scope="col">Email</th>
+        </tr>
+    </thead>
+    <tbody ng-repeat="(key, value) in usersData">
+        <tr ui-sref="userInformation({uuid: value['uuid'] })">
+            <th scope="row"
+            >{{ $index + 1 }}</th>
+            <td ng-bind="value['username']"></td>
+            <td ng-bind="value['email']"></td>
+        </tr>
+    </tbody>
+</table>

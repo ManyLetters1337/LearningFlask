@@ -40,5 +40,6 @@ class Project(db.Model):
             'user_id': self.user_id,
             'title': self.title,
             'description': self.description,
-            'created_on': self.created_on
+            'created_on': self.created_on,
+            'user': self.user.serialize()
         }
