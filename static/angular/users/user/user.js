@@ -10,7 +10,7 @@ angular.module('users.user', [
         })
     };
 
-    getUserData(CONSTANS_URLS.user + $stateParams['uuid'], 'usersData');
+    getUserData(CONSTANS_URLS.users + $stateParams['uuid'], 'usersData');
     getUserData(CONSTANS_URLS.userProjects + $stateParams['uuid'], 'projects');
     getUserData(CONSTANS_URLS.userNotes + $stateParams['uuid'], 'notes');
 

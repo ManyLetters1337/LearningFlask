@@ -7,7 +7,6 @@ from notes.models import Note
 from .models import Project
 from flask import session
 from sqlalchemy import func
-from typing import TYPE_CHECKING
 import uuid
 from users.models import User
 
@@ -97,26 +96,22 @@ class ProjectDBService(BaseDBService):
         :param user: User instance
         :return:
         """
-        stat_for_note = db.session.query(Note.project_id, Note.status, Project.uuid, func.count()).\
+        stat_for_note = db.session.query(Note.project_id, Note.status, Project.title, Project.uuid, func.count()).\
             filter(self.model.user.has(id=user.id)).filter_by(**kwargs).group_by(Note.project_id, Note.status).\
             filter(Project.id == Note.project_id)
+
         check_list = set()
         statistics = {}
 
         for values in stat_for_note:
-            status_and_counts = {}
 
-            if values[0] in check_list:
+            if values.title in check_list:
+                statistics[values.title][values.status] = values[4]
                 continue
 
-            project_title = self.get_title_by_id(values[0])
+            statistics[values.title] = {values.status: values[4]}
+            statistics[values.title]['uuid'] = values.uuid
 
-            for some in stat_for_note:
+            check_list.add(values.title)
 
-                if self.get_title_by_id(some[0]) == project_title:
-                    status_and_counts['uuid'] = some[2]
-                    status_and_counts[some[1]] = some[3]
-
-            statistics[project_title] = status_and_counts
-            check_list.add(values[0])
         return statistics

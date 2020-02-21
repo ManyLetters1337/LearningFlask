@@ -2,16 +2,20 @@ var App = angular.module('angularApp', [
     'ui.router',
     'angularApp.users',
     'angularApp.projects',
-    'angularApp.notes'
+    'angularApp.notes',
+    'angularApp.statistics'
 ]);
 
 
 angular.module('angularApp')
 .config(function config($stateProvider, $locationProvider) {
 
-    $locationProvider.html5Mode(true);
-
     $stateProvider
+        .state('statistics', {
+            url: '/',
+            controller: 'StatisticController',
+            templateUrl: 'static/angular/statistics/statistics.html'
+        })
         .state('users', {
             url: '/users',
             controller: 'UsersController',
@@ -25,7 +29,7 @@ angular.module('angularApp')
         })
 
         .state('notes', {
-            url: '/notes',
+            url: '/angular/notes',
             controller: 'NotesController',
             templateUrl: 'static/angular/notes/view_notes_table.html'
         })

@@ -1,19 +1,20 @@
-angular.module('projects.project', [
+angular.module('angularApp.statistics', [
 
 ])
 
-.controller('ProjectController', function ($http, $scope, $stateParams, CONSTANS_URLS, service) {
-    function getProject (url) {
+.controller('StatisticController', function ($scope, CONSTANS_URLS, $stateParams, service) {
+    function getUsers (url) {
         let promiseObj = service.getData(url);
         promiseObj.then(function (value){
-            $scope.project = value;
+            $scope.users = value;
+            console.log($scope.users)
         })
     }
 
-    getProject(CONSTANS_URLS.project + $stateParams['uuid']);
+    getUsers(CONSTANS_URLS.users);
 
-    function getCanvas() {
-        return document.getElementById('donutChart').getContext('2d');
+    function getCanvas(userID) {
+        return document.getElementById('donutChart' + userID).getContext('2d');
     }
 
     const COLORS = {
@@ -51,8 +52,13 @@ angular.module('projects.project', [
         };
 	}
 
-	function createChart(statusData) {
+	 $scope.createChart = function (userID) {
 
+        let xhr = new XMLHttpRequest();
+
+        xhr.open(method, url, false);
+
+        console.log(userID);
         statusData = {
             'Open' : 1,
             'Closed' : 2,
@@ -75,11 +81,5 @@ angular.module('projects.project', [
             options: donutOptions
         });
     }
-
-    let getDataForStatistic = function () {
-
-    };
-
-    createChart(getDataForStatistic());
 
 });

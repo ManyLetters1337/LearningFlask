@@ -1,0 +1,7 @@
+<div class="container-fluid" ng-repeat="user in users">
+    <div class="row">
+        <div class="card-body" ng-bind="createChart(user.id)">
+                <canvas id="{{ 'donutChart' + user.id }}" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
+        </div>
+    </div>
+</div>

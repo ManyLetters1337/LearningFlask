@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 api_users = Blueprint('api_users', __name__, url_prefix='/users')
 
 
-@api_users.route('/all_users', methods=['GET'])
+@api_users.route('/', methods=['GET'])
 @login_required
 def get_all_user():
     """
@@ -79,3 +79,14 @@ def get_notes_for_user(uuid):
 
     return jsonify([note.serialize() for note in notes])
 
+
+@api_users.route('/statistics', methods=['GET'])
+@login_required
+def get_user_notes_statistic():
+    """
+    Get Notes Statistics for User
+    @return:
+    """
+    stat = services.users.get_notes_statistics()
+
+    return jsonify(stat)

@@ -4,8 +4,11 @@ Database interaction methods for a User class
 from config import secret_key
 from database.base_services import BaseDBService
 from sqlalchemy.orm.exc import NoResultFound
+from sqlalchemy import func
 from werkzeug.exceptions import NotFound
 from .models import User
+from notes.models import Note
+from database.core import db
 import jwt
 import uuid
 
@@ -96,3 +99,27 @@ class UserDBService(BaseDBService):
         self.commit()
 
         return user
+
+    def get_notes_statistics(self) -> dict:
+        """
+        Get statistics for user projects
+        :param user: User instance
+        :return:
+        """
+        query = db.session.query(User.username, User.id, Note.status, func.count()). \
+            group_by(Note.user_id, Note.status). \
+            filter(Note.user_id == User.id)
+
+        users_statistic = {}
+
+        check_list = set()
+        for values in query:
+
+            if values.username in check_list:
+                users_statistic[values.username][values[2]] = values[3]
+                continue
+
+            users_statistic[values.username] = {values[2]: values[3]}
+            check_list.add(values.username)
+
+        return users_statistic

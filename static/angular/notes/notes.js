@@ -4,8 +4,8 @@ angular.module('angularApp.notes', [
 ])
 .config(function config($stateProvider) {
     $stateProvider
-        .state('noteInformation', {
-            url: '/notes/:uuid',
+        .state('notes.noteInformation', {
+            url: '/:uuid',
             params: { uuid : null },
             controller: 'NoteController',
             templateUrl: 'static/angular/notes/note/view_note.html'
